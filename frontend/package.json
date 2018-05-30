@@ -1,0 +1,22 @@
+{
+  "name": "ecommercify",
+  "version": "1.0.0",
+  "description": "E-Commercify frontend built with React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mfituri/ecommercify.git"
+  },
+  "author": "Mohammed M. Fituri <mfituri94@gmail.com> & Yusuf Musleh <yusuf.musleh@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mfituri/ecommercify/issues"
+  },
+  "homepage": "https://github.com/mfituri/ecommercify#readme",
+  "dependencies": {
+    "react": "^16.4.0"
+  }
+}
