@@ -1,0 +1,14 @@
+{% load render_bundle from webpack_loader %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ecommercify</title>
+
+    </head>
+    <body>
+        <div id="react-app" style="height: 100%; width: 100%"></div>
+        {% render_bundle 'store' 'js' %}
+    </body>
+</html>

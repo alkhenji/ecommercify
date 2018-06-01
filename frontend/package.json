@@ -4,7 +4,8 @@
   "description": "E-Commercify frontend built with React",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js --progress --colors --watch"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,14 @@
   },
   "homepage": "https://github.com/mfituri/ecommercify#readme",
   "dependencies": {
-    "react": "^16.4.0"
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "webpack": "^4.10.2",
+    "webpack-bundle-tracker": "git+ssh://git@github.com/Verbozeteam/webpack-bundle-tracker.git",
+    "webpack-cli": "^2.1.4"
   }
 }
