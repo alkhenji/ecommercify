@@ -1,26 +1,25 @@
 const path = require('path');
-var BundleTracker = require('webpack-bundle-tracker');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-    mode: 'development',
     entry: {
         store: './js/StoreApp'
     },
     output: {
-        path: path.resolve("./bundles"),
-        filename: "[name]-[hash].js",
+        path: path.resolve('./bundles'),
+        filename: '[name]-[hash].js',
     },
     plugins: [
-        new BundleTracker({filename: "../webpack-dev-stats.json"}),
+        new CleanWebpackPlugin(['bundles/*.*'], {watch: false}),
     ],
     module: {
         rules: [
             {
                 test: /\.js?/,
                 exclude: /node_modules/,
-                loader: "babel-loader",
+                loader: 'babel-loader',
                 query: {
-                    presets: ["env", "react"]
+                    presets: ['env', 'react']
                 }
             }
         ]
