@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # apps
+    # apps\
+    'core',
     'store',
 
     # packages
@@ -82,6 +83,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecommercify.wsgi.application'
 
+
+# Extends Django's AbstractUser, allows for easy customization in the future
+AUTH_USER_MODEL = 'core.User'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
