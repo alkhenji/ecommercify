@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils import timezone
 
-from store.models.products import Product
-from store.models.customers import Customer, DeliveryAddress
-from store.models.helpers import CurrencyField, Currency
+from store.models.products import *
+from store.models.customers import *
+from store.models.helpers import *
 
 import uuid
 import random
@@ -23,7 +23,8 @@ class OrderStatus:
 '''
 class Order(models.Model):
 
-    order_id = models.IntegerField(unique=True, editable=False, blank=True)
+    order_id = models.IntegerField(unique=True, editable=False, blank=True,
+        null=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     delivery = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
 
@@ -35,10 +36,16 @@ class Order(models.Model):
     private_token = models.UUIDField(default=uuid.uuid4, editable=False)
     public_token = models.UUIDField(default=uuid.uuid4, editable=False)
 
+    def __str__(self):
+        return '#{} {}, {} QAR'.format(self.order_id, str(self.customer),
+            self.total_price)
+
     def calculate_total_price(self, save=False):
         total_price = Currency()
-        for order_product in self.order_product_set.all():
-            total_price.op(operator.add, order_product.price)
+        for op in self.order_products.all():
+            op_total = Currency(op.price)
+            op_total.op(operator.mul, op.quantity)
+            total_price.op(operator.add, op_total.value)
 
         if save:
             self.total_price = total_price.value
@@ -50,8 +57,7 @@ class Order(models.Model):
         return int(str(self.id) + str(random.randint(0, 999)))
 
     def save(self, *args, **kwargs):
-        if not self.total_price:
-            self.total_price = self.calculate_total_price()
+        self.total_price = self.calculate_total_price()
 
         super(Order, self).save(*args, **kwargs)
 
@@ -66,15 +72,16 @@ class Order(models.Model):
 '''
 class OrderProduct(models.Model):
 
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,
+        related_name='order_products')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.SmallIntegerField()
 
     price = CurrencyField()
 
     def __str__(self):
-        return '{}x {} for {}'.format(self.quantity, str(self.product),
-            str(self.price))
+        return '{}x {} for {} QAR'.format(self.quantity, str(self.product),
+            self.price)
 
 '''
     Model representation of a Return Request.
