@@ -10,7 +10,7 @@ class Customer(models.Model):
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='customer')
+        related_name='customers')
 
     phone_number = models.CharField(max_length=16, blank=True, null=True)
 

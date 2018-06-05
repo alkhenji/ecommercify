@@ -1,7 +1,7 @@
 from django.db import models
 
-from store.utils import get_unique_slug
-from store.models.helpers import get_store_upload_path
+from store.utils import *
+from store.models.helpers import *
 
 
 '''
@@ -10,7 +10,7 @@ from store.models.helpers import get_store_upload_path
 class Store(models.Model):
 
     name = models.CharField(max_length=128)
-    slug = models.SlugField(max_length=160, editable=False)
+    slug = models.SlugField(max_length=160, editable=False, unique=True)
 
     image = models.ImageField(upload_to=get_store_upload_path, blank=True,
         null=True)

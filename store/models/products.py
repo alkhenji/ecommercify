@@ -1,8 +1,8 @@
 from django.db import models
 
-from store.utils import get_unique_slug
-from store.models.helpers import CurrencyField, get_product_image_upload_path
-from store.models.stores import Store
+from store.utils import *
+from store.models.helpers import *
+from store.models.stores import *
 
 
 '''
@@ -15,7 +15,8 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
     name = models.CharField(max_length=128)
-    slug = models.SlugField(max_length=160, editable=False)
+    # TODO: use Django admin prepopulated_fields to fill out slugs
+    slug = models.SlugField(max_length=160, editable=False, unique=True)
 
     def __str__(self):
         return self.name
@@ -36,8 +37,9 @@ class Subcategory(models.Model):
         verbose_name_plural = 'subcategories'
 
     name = models.CharField(max_length=128)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    slug = models.SlugField(max_length=160, editable=False)
+    category = models.ForeignKey(Category, related_name='subcategories',
+        on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=160, editable=False, unique=True)
 
     def __str__(self):
         return '{} - {}'.format(self.name, str(self.category))
@@ -56,21 +58,22 @@ class Subcategory(models.Model):
 class Product(models.Model):
 
     name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=288, editable=False)
+    slug = models.SlugField(max_length=288, editable=False, unique=True)
 
-    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(Subcategory, related_name='products',
+        on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, related_name='products',
+        on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     price = CurrencyField()
 
-    thumbnail = models.ForeignKey('ProductImage',
-        related_name='product_thumbnail', blank=True, null=True,
-        on_delete=models.SET_NULL)
+    # thumbnail = models.ForeignKey('ProductImage', related_name='product',
+    #     blank=True, null=True, on_delete=models.SET_NULL)
 
     hidden = models.BooleanField(default=False)
 
     def __str__(self):
-        return '{}, {}, {}'.format(self.name, str(self.store), str(self.price))
+        return '{}, {}, {} QAR'.format(self.name, str(self.store), str(self.price))
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -87,7 +90,8 @@ class Product(models.Model):
 '''
 class ProductImage(models.Model):
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='product_images',
+        on_delete=models.CASCADE)
     image = models.ImageField(upload_to=get_product_image_upload_path)
 
     def __str__(self):
@@ -107,10 +111,9 @@ class ProductImage(models.Model):
 '''
 class RelatedProduct(models.Model):
 
-    product = models.ForeignKey(Product, related_name='relatedproduct_product',
+    product = models.ForeignKey(Product, related_name='related_products',
         on_delete=models.CASCADE)
-    related = models.ForeignKey(Product, related_name='RelatedProduct_related',
-        on_delete=models.CASCADE)
+    related = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} -> {}'.format(str(self.product), str(self.related))
