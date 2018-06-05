@@ -1,12 +1,10 @@
-import * as React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 
-let reactAppElement = document.getElementById("react-app");
-
-const arr = [1, 2, 3];
-const iAmJavascriptES6 = () => console.log(...arr);
-window.iAmJavascriptES6 = iAmJavascriptES6;
-
-ReactDOM.render((
-    <h1>We gots the react...</h1>
-), reactAppElement);
+export default class StoreApp extends React.Component {
+    render() {
+        const { name } = this.props;
+        return (
+            <h1>THIS IS STORE APP: { name }</h1>
+        );
+    }
+}
