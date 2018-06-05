@@ -33,8 +33,7 @@ class Order(models.Model):
 
     total_price = CurrencyField()
 
-    private_token = models.UUIDField(default=uuid.uuid4, editable=False)
-    public_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    token = models.UUIDField(default=uuid.uuid4, editable=False)
 
     def __str__(self):
         return '#{} {}, {} QAR'.format(self.order_id, str(self.customer),
