@@ -19,12 +19,17 @@
   },
   "homepage": "https://github.com/mfituri/ecommercify#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "bootstrap": "^4.1.1",
+    "classnames": "^2.2.6",
     "clean-webpack-plugin": "^0.1.19",
     "compression-webpack-plugin": "^1.1.11",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.3",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-router-dom": "^4.2.2",
@@ -32,5 +37,9 @@
     "webpack-bundle-tracker": "git+ssh://git@github.com/Verbozeteam/webpack-bundle-tracker.git",
     "webpack-cli": "^2.1.4",
     "webpack-merge": "^4.1.2"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.11",
+    "style-loader": "^0.21.0"
   }
 }

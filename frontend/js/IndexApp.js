@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import AsyncComponent from './AsyncComponent';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+
 let reactAppElement = document.getElementById('react-app');
 
 /* Asynchronously load component (chunk) when needed */
@@ -26,11 +29,6 @@ const AboutAndReturnApp = AsyncComponent(
 const IndexApp = () => (
     <Router>
         <div>
-            <ul>
-                <li><Link to='/'>Ecommercify</Link></li>
-                <li><Link to='/cart'>Cart</Link></li>
-                <li><Link to='/about'>About</Link></li>
-            </ul>
             <Route path='/cart' component={CartAndCheckoutApp} />
             <Route path='/about' component={AboutAndReturnApp} />
             <Route exact path='/' component={StoreApp} />
