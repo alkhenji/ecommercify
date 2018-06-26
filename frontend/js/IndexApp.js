@@ -2,6 +2,8 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import AsyncComponent from './AsyncComponent';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -29,9 +31,11 @@ const AboutAndReturnApp = AsyncComponent(
 const IndexApp = () => (
     <Router>
         <div>
+            <NavBar />
             <Route path='/cart' component={CartAndCheckoutApp} />
             <Route path='/about' component={AboutAndReturnApp} />
             <Route exact path='/' component={StoreApp} />
+            <Footer />
         </div>
     </Router>
 );

@@ -1,10 +1,14 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+
+import AboutPage from './pages/AboutPage';
 
 export default class AboutAndReturnApp extends React.Component {
     render() {
-        const { name } = this.props
         return (
-            <h1>THIS IS ABOUT AND RETURN APP: { name }</h1>
+            <div>
+                <AboutPage />
+            </div>
         );
     }
 }

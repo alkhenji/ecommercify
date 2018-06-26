@@ -121,3 +121,6 @@ dump.rdb
 #DS_Store
 .DS_Store
 secrets.sh~
+
+# directory that stores store logo imgs
+stores/

@@ -1,10 +1,14 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+
+import CartPage from './pages/CartPage';
 
 export default class CartAndCheckoutApp extends React.Component {
     render() {
-        const { name } = this.props;
         return (
-            <h1>THIS IS CART AND CHECKOUT APP: { name }</h1>
+            <div>
+                <CartPage />
+            </div>
         );
     }
 }
