@@ -9,7 +9,7 @@ module.exports = {
     output: {
         path: path.resolve('./bundles'),
         filename: '[name]-[hash].js',
-        publicPath: '../static/bundles/'
+        publicPath: '/static/bundles/'
     },
     plugins: [
         new CleanWebpackPlugin(['bundles/*.*'], {watch: false}),
