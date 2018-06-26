@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
+import ProductCard from '../components/ProductCard';
+
 export default class HomePage extends React.Component {
 
   state = {
@@ -16,7 +18,7 @@ export default class HomePage extends React.Component {
   }
 
   fetchAllProducts() {
-    axios.get('api-v1/products/').then(response => {
+    axios.get('/api-v1/products/').then(response => {
       this.setState({
         products: response.data
       });
@@ -26,7 +28,7 @@ export default class HomePage extends React.Component {
   }
 
   fetchAllCategories() {
-    axios.get('api-v1/categories/').then(response => {
+    axios.get('/api-v1/categories/').then(response => {
       this.setState({
         categories: response.data
       });
@@ -36,7 +38,7 @@ export default class HomePage extends React.Component {
   }
 
   fetchAllStores() {
-    axios.get('api-v1/stores/').then(response => {
+    axios.get('/api-v1/stores/').then(response => {
       this.setState({
         stores: response.data
       });
@@ -52,7 +54,7 @@ export default class HomePage extends React.Component {
 
   listProducts() {
     const { products } = this.state;
-    return products.map(product => <p key={product.slug}>{product.name}</p>);
+    return products.map(product => <ProductCard key={product.slug} product={product} />);
   }
 
   listStores() {
@@ -66,7 +68,11 @@ export default class HomePage extends React.Component {
         <h1>Home Page</h1>
         {this.listCategories()}
         {this.listStores()}
-        {this.listProducts()}
+
+        <div className="row">
+          {this.listProducts()}
+        </div>
+
       </div>
     );
   }
