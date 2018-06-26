@@ -7,9 +7,7 @@ import ProductPage from './pages/ProductPage';
 export default class StoreApp extends React.Component {
     render() {
         return (
-            <div>
-                <HomePage />
-            </div>
+            <HomePage />
         );
     }
 }

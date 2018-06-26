@@ -6,9 +6,7 @@ import AboutPage from './pages/AboutPage';
 export default class AboutAndReturnApp extends React.Component {
     render() {
         return (
-            <div>
-                <AboutPage />
-            </div>
+            <AboutPage />
         );
     }
 }

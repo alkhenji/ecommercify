@@ -6,9 +6,7 @@ import CartPage from './pages/CartPage';
 export default class CartAndCheckoutApp extends React.Component {
     render() {
         return (
-            <div>
-                <CartPage />
-            </div>
+            <CartPage />
         );
     }
 }

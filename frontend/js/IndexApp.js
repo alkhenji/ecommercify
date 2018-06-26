@@ -32,13 +32,25 @@ const IndexApp = () => (
     <Router>
         <div>
             <NavBar />
-            <Route path='/cart' component={CartAndCheckoutApp} />
-            <Route path='/about' component={AboutAndReturnApp} />
-            <Route exact path='/' component={StoreApp} />
+            <div style={styles.containerStyle}>
+                <div className='container'>
+                    <Route path='/cart' component={CartAndCheckoutApp} />
+                    <Route path='/about' component={AboutAndReturnApp} />
+                    <Route exact path='/' component={StoreApp} />
+                </div>
+            </div>
             <Footer />
         </div>
     </Router>
 );
+
+const styles = {
+    /* To get sticky NavBar & Footer */
+    containerStyle: {
+        overflowY: 'scroll',
+        maxHeight: 'calc(100vh - 116px)', /* view height - navbar height (56px) - footer height (60px) */
+    }
+}
 
 ReactDOM.render((
     <IndexApp />
