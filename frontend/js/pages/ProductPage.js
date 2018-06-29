@@ -32,8 +32,8 @@ export default class ProductPage extends React.Component {
       return <h1>No such product.</h1>
     }
 
-    else if (product) {
-      return (
+    return (
+      <div style={styles.container} className="container">
         <div className="row featurette">
           <div className="col-md-7 order-md-2">
             <h2 className="featurette-heading">{ product.name }</h2>
@@ -47,8 +47,14 @@ export default class ProductPage extends React.Component {
             <img className="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="500x500" src="http://via.placeholder.com/500x500" data-holder-rendered="true" />
           </div>
         </div>
-      );
-    }
+      </div>
+    );
   }
-
 }
+
+const styles: Object = {
+  container: {
+    marginTop: 30,
+    marginBottom: 30
+  }
+};

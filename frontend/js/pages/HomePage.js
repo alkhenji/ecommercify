@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import ProductCard from '../components/ProductCard';
-import CategoriesBar from '../components/CategoriesBar';
+import ShopByStores from '../components/ShopByStore';
 
 import type { CategoryWithSubcategoriesType, ProductType, StoreType }
   from '../flowtypes';
@@ -78,12 +78,20 @@ export default class HomePage extends React.Component<PropsType, StateType> {
 
     return (
       <div>
-        <h1>Home Page</h1>
-        <div className="row">
-          { this.listProducts() }
+        <div style={styles.container} className="container">
+          <div className="row">
+            { this.listProducts() }
+          </div>
         </div>
-
+        <ShopByStores />
       </div>
     );
   }
 }
+
+const styles: Object = {
+  container: {
+    marginTop: 30,
+    marginBottom: 30
+  }
+};
