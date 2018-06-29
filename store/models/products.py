@@ -67,8 +67,8 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     price = CurrencyField()
 
-    # thumbnail = models.ForeignKey('ProductImage', related_name='product',
-    #     blank=True, null=True, on_delete=models.SET_NULL)
+    thumbnail = models.ForeignKey('ProductImage', related_name='thumbnail_product',
+        blank=True, null=True, on_delete=models.SET_NULL)
 
     hidden = models.BooleanField(default=False)
 
