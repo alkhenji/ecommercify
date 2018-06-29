@@ -1,10 +1,18 @@
+/* @flow */
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import type { ProductType } from '../flowtypes';
 
-export default class ProductCard extends React.Component {
+type PropsType = {
+  product: ProductType,
+};
+type StateType = {};
 
-  renderDescription(desc) {
+export default class ProductCard extends React.Component<PropsType, StateType> {
+
+  renderDescription(desc: string) {
     if (desc.length > 125) {
       return desc.substring(0, 125) + "..."
     }
@@ -26,7 +34,7 @@ export default class ProductCard extends React.Component {
               <div className="btn-group">
                 <button type="button" className="btn btn-md btn-outline-secondary">Add to Cart</button>
               </div>
-              <small className="text-muted">{ product.subcategory.category.name } > { product.subcategory.name }</small>
+              <small className="text-muted"><Link to={ '/category/'+ product.subcategory.category.slug }> { product.subcategory.category.name } </Link> > { product.subcategory.name }</small>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ const StoreApp = ({ match }) => (
       <CategoriesBar />
       <Route exact path={match.url + 'product/:slug/'} component={ProductPage} />
       <Route exact path={match.url + 'store/:slug/'} component={StorePage} />
-      {/* <Route path={match.url + 'category/:slug/'} component={CategoryPage} /> */}
+      <Route path={match.url + 'category/:slug/'} component={CategoryPage} />
       <Route exact path={match.url} component={HomePage}/>
   </div>
 );
