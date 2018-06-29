@@ -5,6 +5,9 @@ import AsyncComponent from './AsyncComponent';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 
+import ProductPage from './pages/ProductPage';
+import CategoriesBar from './components/CategoriesBar';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
@@ -33,11 +36,11 @@ const IndexApp = () => (
         <div>
             <NavBar />
             <div style={styles.containerStyle}>
-                <div className='container'>
+                <Switch>
                     <Route exact path='/cart' component={CartAndCheckoutApp} />
                     <Route exact path='/about' component={AboutAndReturnApp} />
                     <Route path='/' component={StoreApp} />
-                </div>
+                </Switch>
             </div>
             <Footer />
         </div>
@@ -49,7 +52,7 @@ const styles = {
     containerStyle: {
         overflowY: 'scroll',
         maxHeight: 'calc(100vh - 116px)', /* view height - navbar height (56px) - footer height (60px) */
-        paddingTop: 35, /* some space under navbar before adding content */
+        // paddingTop: 35, /* some space under navbar before adding content */
     }
 }
 
