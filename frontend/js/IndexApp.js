@@ -53,6 +53,7 @@ const styles = {
     containerStyle: {
         overflowY: 'scroll',
         maxHeight: 'calc(100vh - 116px)', /* view height - navbar height (56px) - footer height (60px) */
+        paddingTop: 35, /* some space under navbar before adding content */
     }
 }
 
