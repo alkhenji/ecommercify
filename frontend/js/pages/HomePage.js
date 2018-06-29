@@ -70,7 +70,7 @@ export default class HomePage extends React.Component {
         {this.listStores()}
 
         <div className="row">
-          {this.listProducts()}
+          { this.listProducts() }
         </div>
 
       </div>
