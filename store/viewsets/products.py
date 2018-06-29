@@ -27,6 +27,25 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     viewsets.GenericViewSet):
 
     permission_classes = (ReadOnlyPermission,)
-    queryset = Product.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        # get category, subcategory and store filters
+        category = self.request.query_params.get('category', None)
+        subcategory = self.request.query_params.get('subcategory', None)
+        store = self.request.query_params.get('store', None)
+
+        # build the QuerySet
+        products = Product.objects.filter(hidden=False)
+
+        if subcategory:
+            products = products.filter(subcategory__slug=subcategory)
+
+        elif category:
+            products = products.filter(subcategory__category__slug=category)
+
+        if store:
+            products = products.filter(store__slug=store)
+
+        return products
