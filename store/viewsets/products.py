@@ -9,7 +9,7 @@ class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     viewsets.GenericViewSet):
 
     permission_classes = (ReadOnlyPermission,)
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = CategorySerializer
 
@@ -18,7 +18,7 @@ class SubcategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     viewsets.GenericViewSet):
 
     permission_classes = (ReadOnlyPermission,)
-    queryset = Subcategory.objects.all()
+    queryset = Subcategory.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = SubcategorySerializer
 
@@ -27,6 +27,6 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     viewsets.GenericViewSet):
 
     permission_classes = (ReadOnlyPermission,)
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = ProductSerializer
