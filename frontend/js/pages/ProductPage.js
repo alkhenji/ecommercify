@@ -34,10 +34,18 @@ export default class ProductPage extends React.Component {
 
     else if (product) {
       return (
-        <div>
-          <h3>{ product.name }</h3>
-          <h3>{ product.price }</h3>
-          <h3>{ product.description }</h3>
+        <div className="row featurette">
+          <div className="col-md-7 order-md-2">
+            <h2 className="featurette-heading">{ product.name }</h2>
+            <hr/>
+            <p className="lead">{ product.description }</p>
+            <h5>{ product.price } QAR</h5>
+            <br/>
+            <button type="button" className="btn btn-lg btn-outline-secondary">Add to Cart</button>
+          </div>
+          <div className="col-md-5 order-md-1">
+            <img className="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="500x500" src="http://via.placeholder.com/500x500" data-holder-rendered="true" />
+          </div>
         </div>
       );
     }
