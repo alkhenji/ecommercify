@@ -18,7 +18,7 @@ export type SubcategoryWithCategoryType = {
 export type CategoryWithSubcategoriesType = {
   ...CategoryType,
   subcategories: Array<SubcategoryType>
-}
+};
 
 export type StoreType = {
   name: String,

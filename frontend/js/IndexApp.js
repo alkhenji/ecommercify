@@ -5,9 +5,6 @@ import AsyncComponent from './AsyncComponent';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 
-import ProductPage from './pages/ProductPage';
-
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
@@ -39,8 +36,7 @@ const IndexApp = () => (
                 <div className='container'>
                     <Route exact path='/cart' component={CartAndCheckoutApp} />
                     <Route exact path='/about' component={AboutAndReturnApp} />
-                    <Route exact path="/product/:slug/" component={ProductPage} />
-                    <Route exact path='/' component={StoreApp} />
+                    <Route path='/' component={StoreApp} />
                 </div>
             </div>
             <Footer />
