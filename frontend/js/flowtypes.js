@@ -1,13 +1,13 @@
 /* @flow */
 
 export type SubcategoryType = {
-  name: String,
-  slug: String
+  name: string,
+  slug: string
 };
 
 export type CategoryType = {
-  name: String,
-  slug: String,
+  name: string,
+  slug: string,
 };
 
 export type SubcategoryWithCategoryType = {
@@ -21,17 +21,17 @@ export type CategoryWithSubcategoriesType = {
 }
 
 export type StoreType = {
-  name: String,
-  slug: String,
-  image: String | null
+  name: string,
+  slug: string,
+  image: string | null
 };
 
 export type ProductType = {
-  name: String,
-  slug: String,
-  description: String,
-  price: String,
-  hidden: Boolean,
+  name: string,
+  slug: string,
+  description: string,
+  price: string,
+  hidden: boolean,
   subcategory: SubcategoryWithCategoryType,
   store: StoreType
 };
