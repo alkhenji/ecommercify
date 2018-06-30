@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.sessions.models import Session
 
 from store.models.products import *
 from store.models.customers import *
@@ -82,6 +83,7 @@ class OrderProduct(models.Model):
         return '{}x {} for {} QAR'.format(self.quantity, str(self.product),
             self.price)
 
+
 '''
     Model representation of a Return Request.
 '''
@@ -94,3 +96,31 @@ class ReturnRequest(models.Model):
     date_confirmed = models.DateTimeField(null=True, blank=True)
 
     completed = models.BooleanField(default=False)
+
+
+'''
+    Model representation of a Cart.
+'''
+class Cart(models.Model):
+
+    customer = models.ForeignKey(Customer, null=True, blank=True,
+        on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, null=True, blank=True,
+        on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}/{}'.format(self.customer, self.session)
+
+
+'''
+    Model representation of a Cart Product for a Cart.
+'''
+class CartProduct(models.Model):
+
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,
+        related_name='cart_products')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField()
+
+    def __str__(self):
+        return '{}x {}'.format(self.quantity, self.product)

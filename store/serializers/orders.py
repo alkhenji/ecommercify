@@ -22,3 +22,17 @@ class OrderSerialzer(serializers.ModelSerializer):
     order_products = OrderProductSerializer(many=True)
     customer = CustomerSerializer()
     delivery = DeliveryAddressSerializer()
+
+class CartProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartProduct
+        exclude = ('id', 'cart')
+
+    product = ProductSerializer()
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        exclude = ('id',)
+
+    cart_products = CartProductSerializer(many=True)

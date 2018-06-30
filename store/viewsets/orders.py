@@ -19,3 +19,19 @@ class OrderViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         except:
             pass
         return Order.objects.none()
+
+
+class CartViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+
+    serializer_class = CartSerializer
+
+    def get_queryset(self):
+        try:
+            if self.request.user.is_authenticated:
+                cart = Cart.objects.get(customer=user.customer)
+            else:
+                cart = Cart.objects.get(session=request.session.session_key)
+        except:
+            cart = Cart.objects.none()
+
+        return cart
