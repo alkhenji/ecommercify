@@ -9,9 +9,20 @@ class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     viewsets.GenericViewSet):
 
     permission_classes = (ReadOnlyPermission,)
-    queryset = Category.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        # get category
+        store = self.request.query_params.get('store', None)
+
+        # build QuerySet
+        categories = Category.objects.all()
+
+        if store:
+            categories = categories.filter(subcategories__products__store__slug=store)
+
+        return categories.order_by('name')
 
 
 class SubcategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
@@ -36,7 +47,7 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         subcategory = self.request.query_params.get('subcategory', None)
         store = self.request.query_params.get('store', None)
 
-        # build the QuerySet
+        # build QuerySet
         products = Product.objects.filter(hidden=False)
 
         if subcategory:
@@ -48,4 +59,4 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         if store:
             products = products.filter(store__slug=store)
 
-        return products
+        return products.order_by('name')

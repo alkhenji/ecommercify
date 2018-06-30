@@ -4,6 +4,8 @@ import React from 'react';
 import axios from 'axios';
 
 import ProductCard from '../components/ProductCard';
+import CategoriesAndSubcategoriesListPicker from
+  '../components/CategoriesAndSubcategoriesListPicker';
 
 import type { StoreType, ProductType } from '../flowtypes';
 
@@ -82,13 +84,14 @@ export default class StorePage extends React.Component<PropsType, StateType> {
 
   render() {
     const { store, loading } = this.state;
+    const { slug } = this.props.match.params;
 
     if (loading) {
-      return <h1>Loading...</h1>
+      return <h1>Loading...</h1>;
     }
 
     if (!store) {
-      return <h1>No such store.</h1>
+      return <h1>No such store.</h1>;
     }
 
     return (
@@ -96,7 +99,14 @@ export default class StorePage extends React.Component<PropsType, StateType> {
         <h1>{store.name}</h1>
         <hr/>
         <div className="row">
-          {this.listProducts()}
+          <div className="col-md-3">
+            <CategoriesAndSubcategoriesListPicker store_slug={slug}/>
+          </div>
+          <div className="col-md-9">
+            <div className="row">
+              {this.listProducts()}
+            </div>
+          </div>
         </div>
       </div>
     );
