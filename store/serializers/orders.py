@@ -26,13 +26,13 @@ class OrderSerialzer(serializers.ModelSerializer):
 class CartProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartProduct
-        exclude = ('id', 'cart')
+        exclude = ('cart',)
 
     product = ProductSerializer()
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
-        exclude = ('id',)
+        exclude = ('id', 'customer', 'session')
 
     cart_products = CartProductSerializer(many=True)

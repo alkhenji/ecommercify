@@ -1,4 +1,7 @@
 from rest_framework import viewsets, mixins
+from rest_framework.response import Response
+from rest_framework.decorators import action
+
 
 from store.models.orders import *
 from store.serializers.orders import *
@@ -21,17 +24,32 @@ class OrderViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         return Order.objects.none()
 
 
-class CartViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class CartProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet):
 
-    serializer_class = CartSerializer
+    serializer_class = CartProductSerializer
 
     def get_queryset(self):
-        try:
-            if self.request.user.is_authenticated:
-                cart = Cart.objects.get(customer=user.customer)
-            else:
-                cart = Cart.objects.get(session=request.session.session_key)
-        except:
-            cart = Cart.objects.none()
+        cart = Cart.get(self.request)
+        if cart:
+            return CartProduct.objects.filter(cart=cart)
+        return CartProduct.objects.none()
 
-        return cart
+    def create(self, request):
+        cart = Cart.get(request)
+        product = Product.objects.get(slug=request.POST['product'])
+        quantity = request.POST['quantity']
+
+        CartProduct.objects.create(cart=cart,
+            product=product,
+            quantity=quantity)
+
+        return Response({'status': 'Success'})
+
+    @action(methods=['POST'], detail=True)
+    def update_quantity(self, request, pk=None):
+        cart_product = self.get_object()
+        quantity = request.POST['quantity']
+        cart_product.update_quantity(quantity)
+
+        return Response({'status': 'Success'})

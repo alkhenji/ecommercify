@@ -12,6 +12,7 @@ router.register(r'categories', products.CategoryViewSet, base_name='categories')
 router.register(r'stores', stores.StoreViewSet, base_name='stores')
 router.register(r'customers', customers.CustomerViewSet, base_name='customers')
 router.register(r'orders', orders.OrderViewSet, base_name='orders')
+router.register(r'cart', orders.CartProductViewSet, base_name='cart')
 
 urlpatterns = [
     # REST framework

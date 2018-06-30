@@ -111,6 +111,18 @@ class Cart(models.Model):
     def __str__(self):
         return '{}/{}'.format(self.customer, self.session)
 
+    @classmethod
+    def get(cls, request):
+        cart = None
+        try:
+            if request.user.is_authenticated:
+                cart = cls.objects.get(customer=request.user.customer)
+            else:
+                cart = cls.objects.get(session=request.session.session_key)
+        except:
+            pass
+        return cart
+
 
 '''
     Model representation of a Cart Product for a Cart.
@@ -122,5 +134,15 @@ class CartProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.SmallIntegerField()
 
+    class Meta:
+        unique_together = ('cart', 'product')
+
     def __str__(self):
         return '{}x {}'.format(self.quantity, self.product)
+
+    def update_quantity(self, quantity):
+        if int(quantity) > 0:
+            self.quantity = quantity
+            self.save(update_fields=['quantity'])
+        else:
+            self.delete()
