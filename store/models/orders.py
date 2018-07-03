@@ -112,7 +112,7 @@ class Cart(models.Model):
         return '{}/{}'.format(self.customer, self.session)
 
     @classmethod
-    def get(cls, request):
+    def get_using_request(cls, request):
         cart = None
         try:
             if request.user.is_authenticated:

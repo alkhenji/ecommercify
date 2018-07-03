@@ -24,19 +24,19 @@ class OrderViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         return Order.objects.none()
 
 
-class CartProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet):
+class CartProductViewSet(viewsets.ModelViewSet):
 
+    permission_classes = (CartProductPermission,)
     serializer_class = CartProductSerializer
 
     def get_queryset(self):
-        cart = Cart.get(self.request)
+        cart = Cart.get_using_request(self.request)
         if cart:
             return CartProduct.objects.filter(cart=cart)
         return CartProduct.objects.none()
 
     def create(self, request):
-        cart = Cart.get(request)
+        cart = Cart.get_using_request(request)
         product = Product.objects.get(slug=request.POST['product'])
         quantity = request.POST['quantity']
 

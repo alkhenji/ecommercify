@@ -35,3 +35,9 @@ export type ProductType = {
   subcategory: SubcategoryWithCategoryType,
   store: StoreType
 };
+
+export type CartProductType = {
+  id: number,
+  quantity: number,
+  product: ProductType
+};
