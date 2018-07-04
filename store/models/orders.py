@@ -146,3 +146,14 @@ class CartProduct(models.Model):
             self.save(update_fields=['quantity'])
         else:
             self.delete()
+
+    def save(self, *args, **kwargs):
+        # cart product quantity upperbound set by available product quantity
+        if int(self.quantity) > self.product.quantity:
+            self.quantity = self.product.quantity
+
+        elif int(self.quantity) <= 0 and self.product.quantity > 0:
+            self.quantity = 1
+
+        if int(self.quantity) != 0:
+            super(CartProduct, self).save(*args, **kwargs)

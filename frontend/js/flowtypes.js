@@ -31,7 +31,7 @@ export type ProductType = {
   slug: string,
   description: string,
   price: string,
-  hidden: boolean,
+  quantity: number,
   subcategory: SubcategoryWithCategoryType,
   store: StoreType
 };

@@ -24,7 +24,8 @@ class OrderViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         return Order.objects.none()
 
 
-class CartProductViewSet(viewsets.ModelViewSet):
+class CartProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin, viewsets.GenericViewSet):
 
     permission_classes = (CartProductPermission,)
     serializer_class = CartProductSerializer

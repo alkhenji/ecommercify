@@ -28,7 +28,13 @@ export default class CartProduct extends React.Component<PropsType, StateType> {
   renderQuantityDropdownItems(maximum: number) {
     const items = [];
     for (var i = 0; i < maximum; i++) {
-      items.push(<button key={i} className="dropdown-item">{i + 1}</button>);
+      const quantity = i + 1;
+      items.push(
+        <button key={i} className="dropdown-item"
+          onClick={() => this.updateCartProductQuantity(quantity)}>
+          {quantity}
+        </button>
+      );
     }
     return items;
   }
@@ -50,7 +56,7 @@ export default class CartProduct extends React.Component<PropsType, StateType> {
   updateCartProductQuantity(quantity: number) {
     const { cartProduct, refreshCart } = this.props;
 
-    axios.update('/api-v1/cart/' + cartProduct.id + '/',
+    axios.post('/api-v1/cart/' + cartProduct.id + '/update_quantity/',
       qs.stringify({
         quantity
       }), {
@@ -104,7 +110,7 @@ export default class CartProduct extends React.Component<PropsType, StateType> {
                       {cartProduct.quantity}
                     </button>
                     <div className="dropdown-menu" aria-labelledby="quantityDropdown">
-                      {this.renderQuantityDropdownItems(5)}
+                      {this.renderQuantityDropdownItems(cartProduct.product.quantity)}
                     </div>
                   </div>
 

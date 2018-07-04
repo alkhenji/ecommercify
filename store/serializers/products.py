@@ -44,7 +44,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         lookup_field = 'slug'
-        exclude = ('id',)
+        exclude = ('id', 'hidden')
 
     subcategory = SubcategorySerializer()
     store = StoreSerializer()
