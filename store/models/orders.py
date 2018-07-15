@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.sessions.models import Session
 
 from store.models.products import *
 from store.models.customers import *
@@ -82,6 +83,7 @@ class OrderProduct(models.Model):
         return '{}x {} for {} QAR'.format(self.quantity, str(self.product),
             self.price)
 
+
 '''
     Model representation of a Return Request.
 '''
@@ -94,3 +96,64 @@ class ReturnRequest(models.Model):
     date_confirmed = models.DateTimeField(null=True, blank=True)
 
     completed = models.BooleanField(default=False)
+
+
+'''
+    Model representation of a Cart.
+'''
+class Cart(models.Model):
+
+    customer = models.ForeignKey(Customer, null=True, blank=True,
+        on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, null=True, blank=True,
+        on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}/{}'.format(self.customer, self.session)
+
+    @classmethod
+    def get_using_request(cls, request):
+        cart = None
+        try:
+            if request.user.is_authenticated:
+                cart = cls.objects.get(customer=request.user.customer)
+            else:
+                cart = cls.objects.get(session=request.session.session_key)
+        except:
+            pass
+        return cart
+
+
+'''
+    Model representation of a Cart Product for a Cart.
+'''
+class CartProduct(models.Model):
+
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,
+        related_name='cart_products')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField()
+
+    class Meta:
+        unique_together = ('cart', 'product')
+
+    def __str__(self):
+        return '{}x {}'.format(self.quantity, self.product)
+
+    def update_quantity(self, quantity):
+        if int(quantity) > 0:
+            self.quantity = quantity
+            self.save(update_fields=['quantity'])
+        else:
+            self.delete()
+
+    def save(self, *args, **kwargs):
+        # cart product quantity upperbound set by available product quantity
+        if int(self.quantity) > self.product.quantity:
+            self.quantity = self.product.quantity
+
+        elif int(self.quantity) <= 0 and self.product.quantity > 0:
+            self.quantity = 1
+
+        if int(self.quantity) != 0:
+            super(CartProduct, self).save(*args, **kwargs)

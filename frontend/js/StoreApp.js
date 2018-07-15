@@ -8,7 +8,7 @@ import StorePage from './pages/StorePage';
 import CategoriesBar from './components/CategoriesBar';
 
 const StoreApp = ({ match }) => (
-  <div>
+  <React.Fragment>
       <CategoriesBar />
       <Route exact path={match.url + 'product/:slug/'} component={ProductPage} />
       <Route exact path={match.url + 'store/:slug/'} component={StorePage} />
@@ -16,7 +16,7 @@ const StoreApp = ({ match }) => (
       <Route exact path={match.url + 'category/:categorySlug/:storeOrSubcategorySlug'} component={CategoryPage} />
       <Route exact path={match.url + 'category/:categorySlug/'} component={CategoryPage} />
       <Route exact path={match.url} component={HomePage}/>
-  </div>
+  </React.Fragment>
 );
 
 export default StoreApp;

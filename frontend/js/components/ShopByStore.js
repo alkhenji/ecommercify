@@ -36,7 +36,6 @@ export default class ShopByStores extends React.Component<PropsType, StateType> 
   }
 
   renderStoreCard(store: StoreType): HTMLDivElement {
-    console.log(store.image);
     return (
       <Link style={styles.storeCard} key={store.slug} to={"/store/" + store.slug}>
         <div className="card">

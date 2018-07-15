@@ -66,6 +66,7 @@ class Product(models.Model):
         on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     price = CurrencyField()
+    quantity = models.SmallIntegerField(default=0)
 
     thumbnail = models.ForeignKey('ProductImage', related_name='thumbnail_product',
         blank=True, null=True, on_delete=models.SET_NULL)

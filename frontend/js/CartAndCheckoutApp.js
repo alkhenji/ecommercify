@@ -2,13 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 
-export default class CartAndCheckoutApp extends React.Component {
-    render() {
-        return (
-            <div className="container">
-                <CartPage />
-            </div>
-        );
-    }
-}
+const CartAndCheckoutApp = ({ match }) => (
+  <React.Fragment>
+      <Route exact path={match.url + 'checkout/'} component={CheckoutPage} />
+      <Route exact path={match.url} component={CartPage} />
+  </React.Fragment>
+);
+
+export default CartAndCheckoutApp;

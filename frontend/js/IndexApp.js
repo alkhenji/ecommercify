@@ -33,9 +33,9 @@ const AboutAndReturnApp = AsyncComponent(
 
 const IndexApp = () => (
     <Router>
-        <div>
+        <React.Fragment>
             <NavBar />
-            <div style={styles.containerStyle}>
+            <div style={styles.container}>
                 <Switch>
                     <Route exact path='/cart' component={CartAndCheckoutApp} />
                     <Route exact path='/about' component={AboutAndReturnApp} />
@@ -43,13 +43,13 @@ const IndexApp = () => (
                 </Switch>
             </div>
             <Footer />
-        </div>
+        </React.Fragment>
     </Router>
 );
 
 const styles = {
     /* To get sticky NavBar & Footer */
-    containerStyle: {
+    container: {
         overflowY: 'scroll',
         maxHeight: 'calc(100vh - 116px)', /* view height - navbar height (56px) - footer height (60px) */
         // paddingTop: 35, /* some space under navbar before adding content */
