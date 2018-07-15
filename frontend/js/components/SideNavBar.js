@@ -97,6 +97,21 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
     });
   };
 
+  onlyCategoryUrl(pathName: string): boolean {
+    var onlyCategoryRegex = new RegExp('^\/category\/[a-zA-Z]+\/?$');
+    return onlyCategoryRegex.test(pathName);
+  }
+
+  categoryAndStoreOrSubcatUrl(pathName: string): boolean {
+    var categoryAndStoreOrSubcatRegex = new RegExp('^\/category\/[a-zA-Z]+\/[a-zA-Z]+\/?$');
+    return categoryAndStoreOrSubcatRegex.test(pathName);
+  }
+
+  categoryAndStoreAndSubcatUrl(pathName: string): boolean {
+    var categoryAndStoreAndSubcatRegex = new RegExp('^\/category\/[a-zA-Z]+\/[a-zA-Z]+\/[a-zA-Z]+\/?$');
+    return categoryAndStoreAndSubcatRegex.test(pathName);
+  }
+
   isStore(pathName: string): boolean | null {
     const { stores } = this.state;
     var lastSubpathRegex = new RegExp('\/[a-zA-Z]+\/?$(?!.*\/[a-zA-Z]+\/?$)');
@@ -128,39 +143,27 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
      *
      */
 
-    /* Case 1 */
-    var onlyCategoryRegex = new RegExp('^\/category\/[a-zA-Z]+\/?$');
-
-    /* Case 2 & 3 */
-    var categoryAndStoreOrSubcatRegex = new RegExp('^\/category\/[a-zA-Z]+\/[a-zA-Z]+\/?$');
-
-    /* Case 4 */
-    var categoryAndStoreAndSubcatRegex = new RegExp('^\/category\/[a-zA-Z]+\/[a-zA-Z]+\/[a-zA-Z]+\/?$');
-
     var lastSubpathRegex = new RegExp('\/[a-zA-Z]+\/?$(?!.*\/[a-zA-Z]+\/?$)');
 
     /* Case 1 */
-    if (onlyCategoryRegex.test(pathName)) {
+    if (this.onlyCategoryUrl(pathName)) {
       /* check if last char is a slash */
-      if (pathName.slice(-1) === '/') {
-        return pathName + storeSlug;
-      }
-      else {
-        return pathName + '/' + storeSlug;
-      }
+      var generatedUrl = pathName.slice(-1) === '/' ? pathName + storeSlug : pathName + '/' + storeSlug;
+      return generatedUrl;
     }
     /* Case 2 & 3 */
-    else if (categoryAndStoreOrSubcatRegex.test(pathName)) {
+    else if (this.categoryAndStoreOrSubcatUrl(pathName)) {
       /* determine if pathname is store or subcat */
       if (this.isStore(pathName)) {
         return pathName.replace(lastSubpathRegex, '/' + storeSlug);
       }
       else {
-        return pathName + '/' + storeSlug;
+        var generatedUrl = pathName.slice(-1) === '/' ? pathName + storeSlug : pathName + '/' + storeSlug;
+        return generatedUrl;
       }
     }
     /* Case 4 */
-    else if (categoryAndStoreAndSubcatRegex.test(pathName)) {
+    else if (this.categoryAndStoreAndSubcatUrl(pathName)) {
       return pathName.replace(lastSubpathRegex, '/' + storeSlug);
     }
     /* Case should not happen, but just in case we return the full store url */
@@ -169,20 +172,34 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
     }
   }
 
+  removeStoreFromUrl(pathName: string): string {
+    /* we simply generate a store url with an empty slug and remove the extra / in the url */
+    var urlWithoutStore = this.generateStoreUrl(pathName, '').replace(/\/\//g, '/');
+    return urlWithoutStore;
+  }
+
   renderStores(): Array<any> {
     const { stores } = this.state;
 
     var currentPathName = window.location.pathname;
 
-    return (
-      stores.map((store, i) =>
-        <li className="nav-item" key={'store-'+store.slug+'-'+i}>
-          <NavLink to={this.generateStoreUrl(currentPathName, store.slug)} className="nav-link" activeClassName="active">
-            { store.name }
-          </NavLink>
-        </li>
-      )
+    var storesTabsList = stores.map((store, i) =>
+      <li className='nav-item' key={'store-'+store.slug+'-'+i}>
+        <NavLink to={this.generateStoreUrl(currentPathName, store.slug)} className='nav-link' activeClassName='active'>
+          { store.name }
+        </NavLink>
+      </li>
     );
+
+    var allStoresTab = <li className='nav-item' key={'store-all'}>
+        <NavLink exact to={this.generateStoreUrl(currentPathName, '')} className='nav-link' activeClassName='active'>
+          All
+        </NavLink>
+      </li>
+
+    storesTabsList.push(allStoresTab);
+
+    return storesTabsList;
   };
 
   isSubcategory(category: CategoryType, pathName: string): boolean | null {
@@ -216,29 +233,17 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
      *
      */
 
-    /* Case 1 */
-    var onlyCategoryRegex = new RegExp('^\/category\/[a-zA-Z]+\/?$');
-
-    /* Case 2 & 3 */
-    var categoryAndStoreOrSubcatRegex = new RegExp('^\/category\/[a-zA-Z]+\/[a-zA-Z]+\/?$');
-
-    /* Case 4 */
-    var categoryAndStoreAndSubcatRegex = new RegExp('^\/category\/[a-zA-Z]+\/[a-zA-Z]+\/[a-zA-Z]+\/?$');
-
     var lastSubpathRegex = new RegExp('\/[a-zA-Z]+\/?$(?!.*\/[a-zA-Z]+\/?$)');
 
     /* Case 1 */
-    if (onlyCategoryRegex.test(pathName)) {
+    if (this.onlyCategoryUrl(pathName)) {
       /* check if last char is a slash */
-      if (pathName.slice(-1) === '/') {
-        return pathName + subcatSlug;
-      }
-      else {
-        return pathName + '/' + subcatSlug;
-      }
+      var generatedUrl = pathName.slice(-1) === '/' ? pathName + subcatSlug : pathName + '/' + subcatSlug;
+      return generatedUrl;
+
     }
     /* Case 2 & 3 */
-    else if (categoryAndStoreOrSubcatRegex.test(pathName)) {
+    else if (this.categoryAndStoreOrSubcatUrl(pathName)) {
       /* determine if pathname is store or subcat */
       if (this.isSubcategory(category, pathName)) {
         return pathName.replace(lastSubpathRegex, '/' + subcatSlug);
@@ -253,7 +258,7 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
       }
     }
     /* Case 4 */
-    else if (categoryAndStoreAndSubcatRegex.test(pathName)) {
+    else if (this.categoryAndStoreAndSubcatUrl(pathName)) {
 
       var storeSubpath = pathName.match(lastSubpathRegex);
       if (storeSubpath) {
@@ -270,18 +275,32 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
     }
   }
 
+  removeSubcatFromUrl(pathName: string, category: CategoryType): string {
+    /* we simply generate a subcat url with an empty slug and remove the extra / in the url */
+    var urlWithoutSubcat = this.generateSubcatUrl(pathName, category, '').replace(/\/\//g, '/');
+    return urlWithoutSubcat;
+  }
+
   renderSubcategories(category: CategoryType): Array<any> {
     var currentPathName =  window.location.pathname;
 
-    return (
-      category.subcategories.map((subcategory, i) =>
-        <li className='nav-item' key={'subcategory-'+subcategory.slug+'-'+i}>
-          <NavLink to={this.generateSubcatUrl(currentPathName, category, subcategory.slug)} className="nav-link" activeClassName="active">
-            { subcategory.name }
-          </NavLink>
-        </li>
-      )
+    var subcategoriesTabsList = category.subcategories.map((subcategory, i) =>
+      <li className='nav-item' key={'subcategory-'+subcategory.slug+'-'+i}>
+        <NavLink to={this.generateSubcatUrl(currentPathName, category, subcategory.slug)} className='nav-link' activeClassName='active'>
+          { subcategory.name }
+        </NavLink>
+      </li>
     );
+
+    var allSubcatsTab = <li className='nav-item' key={'subcategory-all'}>
+      <NavLink exact to={this.removeSubcatFromUrl(currentPathName, category)} className='nav-link' activeClassName='active'>
+        All
+      </NavLink>
+    </li>
+
+    subcategoriesTabsList.push(allSubcatsTab);
+
+    return subcategoriesTabsList;
   };
 
   renderCategories(): Array<any> {
@@ -289,8 +308,8 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
 
     return (
       categories.map((category, i) =>
-        <li className="nav-item" key={'store-'+category.slug+'-'+i}>
-          <a className="nav-link" href="#" data-toggle="pill" href="#v-pills-profile-2" role="tab" aria-controls="v-pills-profile-2" aria-selected="false">{ category.name }</a>
+        <li className='nav-item' key={'store-'+category.slug+'-'+i}>
+          <a className='nav-link' href='#' data-toggle='pill' href='#v-pills-profile-2' role='tab' aria-controls='v-pills-profile-2' aria-selected='false'>{ category.name }</a>
             <ul style={{listStyleType: 'none' }}>
               { this.renderSubcategories(category) }
             </ul>
@@ -304,7 +323,7 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
 
     return (
       <div>
-        <ul className="nav nav-pills flex-column" role="tablist" aria-orientation="vertical">
+        <ul className='nav nav-pills flex-column' role='tablist' aria-orientation='vertical'>
 
           { category instanceof Object ? <h5>Subcategories</h5> : <h5>Categories</h5> }
           { category instanceof Object ? this.renderSubcategories(category) : this.renderCategories() }
