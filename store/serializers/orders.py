@@ -13,7 +13,7 @@ class OrderProductSerializer(serializers.ModelSerializer):
 
     product = ProductSerializer()
 
-class OrderSerialzer(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         lookup_field = 'order_id'

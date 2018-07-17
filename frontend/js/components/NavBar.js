@@ -28,6 +28,14 @@ export default class NavBar extends React.Component<PropsType, StateType> {
                 <NavLink className="nav-link" activeClassName="active" exact to="/cart">Cart</NavLink>
               </li>
             </ul>
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <a className="nav-link" href="/signup">Sign up</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/signin">Sign in</a>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>

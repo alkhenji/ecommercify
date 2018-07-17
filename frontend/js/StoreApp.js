@@ -1,3 +1,5 @@
+/* @flow */
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
@@ -7,16 +9,21 @@ import CategoryPage from './pages/CategoryPage';
 import StorePage from './pages/StorePage';
 import CategoriesBar from './components/CategoriesBar';
 
-const StoreApp = ({ match }) => (
-  <React.Fragment>
+const StoreApp = ({ match }) => {
+  console.log('StoreApp');
+  console.log(match);
+
+  return (
+    <React.Fragment>
       <CategoriesBar />
-      <Route exact path={match.url + 'product/:slug/'} component={ProductPage} />
-      <Route exact path={match.url + 'store/:slug/'} component={StorePage} />
+      <Route exact path={match.url + 'product/:slug'} component={ProductPage} />
+      <Route exact path={match.url + 'store/:slug'} component={StorePage} />
       <Route path={match.url + 'category/:categorySlug/:storeOrSubcategorySlug/:storeSlug'} component={CategoryPage} />
       <Route exact path={match.url + 'category/:categorySlug/:storeOrSubcategorySlug'} component={CategoryPage} />
-      <Route exact path={match.url + 'category/:categorySlug/'} component={CategoryPage} />
+      <Route exact path={match.url + 'category/:categorySlug'} component={CategoryPage} />
       <Route exact path={match.url} component={HomePage}/>
-  </React.Fragment>
-);
+    </React.Fragment>
+  );
+};
 
 export default StoreApp;
