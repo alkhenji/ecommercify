@@ -98,23 +98,23 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
   };
 
   onlyCategoryUrl(pathName: string): boolean {
-    var onlyCategoryRegex = new RegExp('^\/category\/[a-zA-Z]+\/?$');
+    var onlyCategoryRegex = new RegExp('^\/category\/[^\/ ]*\/?$');
     return onlyCategoryRegex.test(pathName);
   }
 
   categoryAndStoreOrSubcatUrl(pathName: string): boolean {
-    var categoryAndStoreOrSubcatRegex = new RegExp('^\/category\/[a-zA-Z]+\/[a-zA-Z]+\/?$');
+    var categoryAndStoreOrSubcatRegex = new RegExp('^\/category\/[^\/ ]*\/[^\/ ]*\/?$');
     return categoryAndStoreOrSubcatRegex.test(pathName);
   }
 
   categoryAndStoreAndSubcatUrl(pathName: string): boolean {
-    var categoryAndStoreAndSubcatRegex = new RegExp('^\/category\/[a-zA-Z]+\/[a-zA-Z]+\/[a-zA-Z]+\/?$');
+    var categoryAndStoreAndSubcatRegex = new RegExp('^\/category\/[^\/ ]*\/[^\/ ]*\/[^\/ ]*\/?$');
     return categoryAndStoreAndSubcatRegex.test(pathName);
   }
 
   isStore(pathName: string): boolean | null {
     const { stores } = this.state;
-    var lastSubpathRegex = new RegExp('\/[a-zA-Z]+\/?$(?!.*\/[a-zA-Z]+\/?$)');
+    var lastSubpathRegex = new RegExp('\/[^\/ ]*\/?$(?!.*\/[^\/ ]*\/?$)');
 
     var lastSubpath = pathName.match(lastSubpathRegex);
     if (lastSubpath){
@@ -143,7 +143,7 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
      *
      */
 
-    var lastSubpathRegex = new RegExp('\/[a-zA-Z]+\/?$(?!.*\/[a-zA-Z]+\/?$)');
+    var lastSubpathRegex = new RegExp('\/[^\/ ]*\/?$(?!.*\/[^\/ ]*\/?$)');
 
     /* Case 1 */
     if (this.onlyCategoryUrl(pathName)) {
@@ -204,7 +204,7 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
 
   isSubcategory(category: CategoryType, pathName: string): boolean | null {
 
-    var lastSubpathRegex = new RegExp('\/[a-zA-Z]+\/?$(?!.*\/[a-zA-Z]+\/?$)');
+    var lastSubpathRegex = new RegExp('\/[^\/ ]*\/?$(?!.*\/[^\/ ]*\/?$)');
 
     var lastSubpath = pathName.match(lastSubpathRegex);
     if (lastSubpath){
@@ -233,7 +233,7 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
      *
      */
 
-    var lastSubpathRegex = new RegExp('\/[a-zA-Z]+\/?$(?!.*\/[a-zA-Z]+\/?$)');
+    var lastSubpathRegex = new RegExp('\/[^\/ ]*\/?$(?!.*\/[^\/ ]*\/?$)');
 
     /* Case 1 */
     if (this.onlyCategoryUrl(pathName)) {
