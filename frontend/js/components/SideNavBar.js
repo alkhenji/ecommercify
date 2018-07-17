@@ -70,7 +70,6 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
 
   componentDidMount() {
     this.determineSideNavBarContent(this.props);
-
   }
 
   fetchAllCategories() {

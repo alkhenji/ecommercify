@@ -10,18 +10,17 @@ import StorePage from './pages/StorePage';
 import CategoriesBar from './components/CategoriesBar';
 
 const StoreApp = ({ match }) => {
-  console.log('StoreApp');
-  console.log(match);
-
   return (
     <React.Fragment>
       <CategoriesBar />
-      <Route exact path={match.url + 'product/:slug'} component={ProductPage} />
-      <Route exact path={match.url + 'store/:slug'} component={StorePage} />
-      <Route path={match.url + 'category/:categorySlug/:storeOrSubcategorySlug/:storeSlug'} component={CategoryPage} />
-      <Route exact path={match.url + 'category/:categorySlug/:storeOrSubcategorySlug'} component={CategoryPage} />
-      <Route exact path={match.url + 'category/:categorySlug'} component={CategoryPage} />
-      <Route exact path={match.url} component={HomePage}/>
+      <Switch>
+        <Route exact path={match.url + 'product/:slug'} component={ProductPage} />
+        <Route exact path={match.url + 'store/:slug'} component={StorePage} />
+        <Route path={match.url + 'category/:categorySlug/:storeOrSubcategorySlug/:storeSlug'} component={CategoryPage} />
+        <Route exact path={match.url + 'category/:categorySlug/:storeOrSubcategorySlug'} component={CategoryPage} />
+        <Route exact path={match.url + 'category/:categorySlug'} component={CategoryPage} />
+        <Route exact path={match.url} component={HomePage}/>
+      </Switch>
     </React.Fragment>
   );
 };
