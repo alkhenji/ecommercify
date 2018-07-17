@@ -13,7 +13,7 @@ class OrderViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
     permission_classes = (OrderPermission,)
     lookup_field = 'order_id'
-    serializer_class = OrderSerialzer
+    serializer_class = OrderSerializer
 
     def get_queryset(self):
         user = self.request.user

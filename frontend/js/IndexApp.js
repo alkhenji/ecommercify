@@ -1,4 +1,6 @@
-import * as React from 'react';
+/* @flow */
+
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import AsyncComponent from './AsyncComponent';
@@ -31,14 +33,21 @@ const AboutAndReturnApp = AsyncComponent(
     { name: 'AboutAndReturnApp' }
 );
 
+/* Asynchronously load component (chunk) when needed */
+const SignUpAndSignInApp = AsyncComponent(
+    () => { return import('./SignUpAndSignInApp').then(module => module.default) },
+    { name: 'SignUpAndSignInApp' }
+);
+
 const IndexApp = () => (
     <Router>
         <React.Fragment>
             <NavBar />
             <div style={styles.container}>
                 <Switch>
-                    <Route exact path='/cart' component={CartAndCheckoutApp} />
-                    <Route exact path='/about' component={AboutAndReturnApp} />
+                    <Route path='/cart' component={CartAndCheckoutApp} />
+                    <Route path='/about' component={AboutAndReturnApp} />
+                    <Route path='/auth' component={SignUpAndSignInApp} />
                     <Route path='/' component={StoreApp} />
                 </Switch>
             </div>

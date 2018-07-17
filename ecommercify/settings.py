@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     # packages
     'webpack_loader',
+    'widget_tweaks',
     'rest_framework',
     'rest_framework.authtoken'
 ]
@@ -143,6 +144,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'frontend'),
+    os.path.join(BASE_DIR, 'store/static')
 )
 
 WEBPACK_STATS_FILE = 'webpack-dev-stats.json'
