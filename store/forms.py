@@ -11,7 +11,8 @@ class AuthenticationForm(forms.Form):
     AuthenticationForm class.
     '''
 
-    email = EmailField(widget=forms.TextField(attrs={'autofocus': True}))
+    email = None
+    # email = EmailField(widget=forms.TextField(attrs={'autofocus': True}))
     password = forms.CharField(label='Password', strip=False,
         widget=forms.PasswordInput)
 

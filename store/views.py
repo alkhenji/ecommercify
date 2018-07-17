@@ -1,5 +1,7 @@
 from django.shortcuts import render
-
+from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
+from django.utils.decorators import method_decorator
 from django.contrib.auth.views import SuccessURLAllowedHostsMixin
 
 from store.forms import AuthenticationForm
@@ -14,9 +16,9 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
     redirect_authenticated_user = False
     template_name = 'signin.html'
 
-    @method_decorator(sensitive_post_parameter())
-    @method_decorator(csrf_protect)
-    @method_decorator(never_cache)
+    # @method_decorator(sensitive_post_parameter())
+    # @method_decorator(csrf_protect)
+    # @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
         if self.redirect_authenticated_user and self.user.is_authenticated:
             redirect_to = self.get_success_url()
@@ -62,4 +64,5 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
         auth_login(self.request, form.get_user())
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_context_field()
+    def get_context_field():
+        pass

@@ -19,7 +19,7 @@ urlpatterns = [
     # REST framework
     path('api-v1/', include(router.urls)),
 
-    path('signin', SignInPageView.as_view(), name='signin'),
+    # path('signin', SignInPageView.as_view(), name='signin'),
 
     # Should be last because matches everything
     re_path(r'', IndexPageView.as_view(), name='index')
