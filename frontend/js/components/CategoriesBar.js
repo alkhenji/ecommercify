@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 
 import CategoryPage from '../pages/CategoryPage';
@@ -38,9 +38,9 @@ export default class CategoriesBar extends React.Component<PropsType, StateType>
   renderCategory(category: CategoryWithSubcategoriesType) {
     return (
       <li className="nav-item" key={category.slug}>
-        <Link className="nav-link" to={"/category/" + category.slug}>
+        <NavLink className="nav-link" activeClassName="active" to={"/category/" + category.slug}>
           {category.name}
-        </Link>
+        </NavLink>
       </li>
     );
   }

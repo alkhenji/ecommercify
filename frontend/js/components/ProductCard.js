@@ -84,6 +84,6 @@ export default class ProductCard extends React.Component<PropsType, StateType> {
 
 const styles = {
   descriptionStyle: {
-    height: 72
+    height: 85
   }
 };

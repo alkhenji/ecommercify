@@ -8,6 +8,7 @@ export type SubcategoryType = {
 export type CategoryType = {
   name: string,
   slug: string,
+  subcategories: Array<SubcategoryType>
 };
 
 export type SubcategoryWithCategoryType = {
