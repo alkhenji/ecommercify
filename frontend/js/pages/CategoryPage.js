@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import type { CategoryType, ProductType } from '../flowtypes';
 import ProductCard from '../components/ProductCard';
-import SideNavBar from '../components/SideNavBar';
+import CategoryPageSideNavBar from '../components/CategoryPageSideNavBar';
 
 type PropsType = {
   match: Object,
@@ -177,12 +177,12 @@ export default class CategoryPage extends React.Component<PropsType, StateType> 
     else if (category.name !== '') {
       return (
         <div style={styles.container}>
-          <div className='container-fluid'>
+          <div className='container'>
             <div className='row'>
-              <div className='col-md-2'>
-                <SideNavBar category={category} />
+              <div className='col-md-3'>
+                <CategoryPageSideNavBar category={category} />
               </div>
-              <div className='col-md-8'>
+              <div className='col-md-9'>
                 <div className='row'>
                   { this.renderProductsUnderCategory() }
                 </div>

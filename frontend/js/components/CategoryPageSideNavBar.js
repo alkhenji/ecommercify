@@ -26,7 +26,7 @@ type StateType = {
   categories: Array<CategoryType>,
 };
 
-export default class SideNavBar extends React.Component<PropsType, StateType> {
+export default class CategoryPageSideNavBar extends React.Component<PropsType, StateType> {
 
   state = {
     stores: [],
@@ -38,7 +38,7 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
     category: true,
   }
 
-  determineSideNavBarContent(props: PropsType) {
+  determineCategoryPageSideNavBarContent(props: PropsType) {
     const { store, category } = props;
 
     if (store !== false) {
@@ -65,11 +65,11 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
   }
 
   componentWillReceiveProps(nextProps: PropsType) {
-    this.determineSideNavBarContent(this.props);
+    this.determineCategoryPageSideNavBarContent(this.props);
   };
 
   componentDidMount() {
-    this.determineSideNavBarContent(this.props);
+    this.determineCategoryPageSideNavBarContent(this.props);
   }
 
   fetchAllCategories() {

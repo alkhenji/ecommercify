@@ -16,7 +16,7 @@ type StateType = {
   loading: boolean
 };
 
-export default class CategoriesAndSubcategoriesListPicker extends
+export default class StorePageSideNavBar extends
   React.Component<PropsType, StateType> {
 
 
