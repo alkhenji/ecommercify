@@ -36,6 +36,10 @@ export default class CategoryPage extends React.Component<PropsType, StateType> 
     const response = await this.fetchCategoryDetails(categorySlug)
     const { category } = this.state;
 
+    if (!category) {
+      return;
+    }
+
     var filteredSubcats = category.subcategories.filter((subcat) => subcat.slug == storeOrSubcategorySlug);
     var isSubcategory = filteredSubcats.length > 0 ? true : false;
 
@@ -164,7 +168,11 @@ export default class CategoryPage extends React.Component<PropsType, StateType> 
     const { category } = this.state;
 
     if (category == null) {
-      return <h1>No such category.</h1>
+      return (
+        <div className='container' style={styles.container}>
+          <h1>No such category.</h1>
+        </div>
+      )
     }
     else if (category.name !== '') {
       return (

@@ -81,7 +81,7 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
       this.setState({
         categories: [],
       })
-    })
+    });
   }
 
   fetchAllStores() {
@@ -318,7 +318,7 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
   }
 
   render() {
-    const { category } = this.props;
+    const { category, store } = this.props;
 
     return (
       <div>
@@ -327,8 +327,8 @@ export default class SideNavBar extends React.Component<PropsType, StateType> {
           { category instanceof Object ? <h5>Subcategories</h5> : <h5>Categories</h5> }
           { category instanceof Object ? this.renderSubcategories(category) : this.renderCategories() }
           <hr />
-          <h5>Stores</h5>
-          { this.renderStores() }
+          { store == true ? <h5>Stores</h5> : null }
+          { store == true ? this.renderStores() : null }
 
         </ul>
       </div>
