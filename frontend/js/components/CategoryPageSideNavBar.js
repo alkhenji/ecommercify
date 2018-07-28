@@ -307,7 +307,7 @@ export default class CategoryPageSideNavBar extends React.Component<PropsType, S
 
     return (
       categories.map((category, i) =>
-        <li className='nav-item' key={'store-'+category.slug+'-'+i}>
+        <li className='nav-item' key={'category-'+category.slug+'-'+i}>
           <a className='nav-link' href='#' data-toggle='pill' href='#v-pills-profile-2' role='tab' aria-controls='v-pills-profile-2' aria-selected='false'>{ category.name }</a>
             <ul style={{listStyleType: 'none' }}>
               { this.renderSubcategories(category) }

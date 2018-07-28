@@ -14,13 +14,13 @@ class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
     def get_queryset(self):
         # get category
-        store = self.request.query_params.get('store', None)
+        stores = self.request.query_params.getlist('store', None)
 
         # build QuerySet
         categories = Category.objects.all()
 
-        if store:
-            categories = categories.filter(subcategories__products__store__slug=store)
+        if stores:
+            categories = categories.filter(subcategories__products__store__slug__in=stores)
 
         return categories.order_by('name')
 
@@ -29,9 +29,20 @@ class SubcategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     viewsets.GenericViewSet):
 
     permission_classes = (ReadOnlyPermission,)
-    queryset = Subcategory.objects.all().order_by('name')
     lookup_field = 'slug'
     serializer_class = SubcategorySerializer
+
+    def get_queryset(self):
+        # get subcategory
+        stores = self.request.query_params.getlist('store', None)
+
+        # build QuerySet
+        subcategories = Subcategory.objects.all()
+
+        if stores:
+            subcategories = subcategories.filter(products__store__slug__in=stores)
+
+        return subcategories.order_by('name')
 
 
 class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
@@ -43,20 +54,20 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
     def get_queryset(self):
         # get category, subcategory and store filters
-        category = self.request.query_params.get('category', None)
-        subcategory = self.request.query_params.get('subcategory', None)
-        store = self.request.query_params.get('store', None)
+        categories = self.request.query_params.getlist('category', None)
+        subcategories = self.request.query_params.getlist('subcategory', None)
+        stores = self.request.query_params.getlist('store', None)
 
         # build QuerySet
         products = Product.objects.filter(hidden=False)
 
-        if subcategory:
-            products = products.filter(subcategory__slug=subcategory)
+        if subcategories:
+            products = products.filter(subcategory__slug__in=subcategories)
 
-        elif category:
-            products = products.filter(subcategory__category__slug=category)
+        elif categories:
+            products = products.filter(subcategory__category__slug__in=categories)
 
-        if store:
-            products = products.filter(store__slug=store)
+        if stores:
+            products = products.filter(store__slug__in=stores)
 
         return products.order_by('name')

@@ -2,10 +2,10 @@
 
 import React from 'react';
 import axios from 'axios';
+import queryString from 'query-string';
 
 import ProductCard from '../components/ProductCard';
-import CategoriesAndSubcategoriesListPicker from
-  '../components/CategoriesAndSubcategoriesListPicker';
+import StorePageSideNavBar from '../components/StorePageSideNavBar';
 
 import type { StoreType, ProductType } from '../flowtypes';
 
@@ -39,11 +39,29 @@ export default class StorePage extends React.Component<PropsType, StateType> {
     loading: true,
   };
 
-  componentDidMount() {
-    const { slug } = this.props.match.params;
+  componentWillReceiveProps(newProps: PropsType) {
+    const { slug } = newProps.match.params;
+
+    var filterParameters = queryString.parse(newProps.location.search);
+
     if (slug) {
       this.fetchStore(slug);
-      this.fetchStoreProducts(slug);
+      this.fetchStoreProducts(slug, filterParameters);
+    } else {
+      this.setState({
+        loading: false,
+      });
+    }
+
+  }
+
+  componentDidMount() {
+    const { slug } = this.props.match.params;
+    var filterParameters = queryString.parse(this.props.location.search);
+
+    if (slug) {
+      this.fetchStore(slug);
+      this.fetchStoreProducts(slug, filterParameters);
     } else {
       this.setState({
         loading: false,
@@ -65,8 +83,10 @@ export default class StorePage extends React.Component<PropsType, StateType> {
     });
   }
 
-  fetchStoreProducts(slug: string) {
-    axios.get('/api-v1/products/?store=' + slug).then(response => {
+  fetchStoreProducts(slug: string, filterParameters: Object) {
+    filterParameters.store = slug;
+    var queryParameters = queryString.stringify(filterParameters);
+    axios.get('/api-v1/products/?' + queryParameters).then(response => {
       this.setState({
         products: response.data,
       });
@@ -77,6 +97,9 @@ export default class StorePage extends React.Component<PropsType, StateType> {
 
   listProducts() {
     const { products } = this.state;
+    if (products.length == 0) {
+      return <h1>No matching products.</h1>
+    }
     return products.map(product =>
       <ProductCard key={product.slug} product={product} />
     );
@@ -100,7 +123,7 @@ export default class StorePage extends React.Component<PropsType, StateType> {
         <hr/>
         <div className="row">
           <div className="col-md-3">
-            <CategoriesAndSubcategoriesListPicker store_slug={slug}/>
+            <StorePageSideNavBar storeSlug={slug} />
           </div>
           <div className="col-md-9">
             <div className="row">
@@ -109,6 +132,7 @@ export default class StorePage extends React.Component<PropsType, StateType> {
           </div>
         </div>
       </div>
+
     );
   }
 }
