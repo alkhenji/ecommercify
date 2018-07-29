@@ -1,6 +1,9 @@
 from django.urls import path, include, re_path
 # from django.contrib.auth import views as auth_views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 from rest_framework import routers
 
 from store.views import *
@@ -28,3 +31,8 @@ urlpatterns = [
     # Should be last because matches everything
     re_path(r'', IndexPageView.as_view(), name='index')
 ]
+
+# Add urls to media files when in development to serve them
+# Production images should be hosted somewhere else
+if settings.DEBUG:
+    urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + urlpatterns

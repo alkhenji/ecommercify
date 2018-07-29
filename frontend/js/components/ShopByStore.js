@@ -1,8 +1,12 @@
+/* @flow */
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 import type { StoreType } from '../flowtypes';
+
+import StoreCard from './StoreCard';
 
 type PropsType = {};
 type StateType = {
@@ -35,16 +39,9 @@ export default class ShopByStores extends React.Component<PropsType, StateType> 
     });
   }
 
-  renderStoreCard(store: StoreType): HTMLDivElement {
-    return (
-      <Link style={styles.storeCard} key={store.slug} to={"/store/" + store.slug}>
-        <div className="card">
-          <div className="card-body">
-            <h5 className="card-title">{store.name}</h5>
-          </div>
-        </div>
-      </Link>
-    );
+  listStores() {
+    const { stores } = this.state;
+    return stores.map(store => <StoreCard key={store.slug} store={store} />);
   }
 
   render() {
@@ -59,7 +56,7 @@ export default class ShopByStores extends React.Component<PropsType, StateType> 
         <div className="container">
           <h3 style={styles.header}>Shop by Store</h3>
           <div className="row justify-content-center">
-            {stores.map(this.renderStoreCard.bind(this))}
+            { this.listStores() }
           </div>
         </div>
       </div>

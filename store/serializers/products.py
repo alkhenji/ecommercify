@@ -48,3 +48,4 @@ class ProductSerializer(serializers.ModelSerializer):
 
     subcategory = SubcategorySerializer()
     store = StoreSerializer()
+    thumbnail = ProductImageSerializer()
