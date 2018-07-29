@@ -131,10 +131,8 @@ class Cart(models.Model):
     def get_by_user_or_session(cls, request):
 
         if request.user.is_authenticated:
-            print('getting by user')
             return cls.get_by_user(request.user)
         else:
-            print('getting by session')
             return cls.get_by_session(request)
 
     @classmethod

@@ -6,7 +6,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import login, logout
 
-from store.forms import AuthenticationForm
+from store.forms import AuthenticationForm, CreateCustomerForm
 
 from store.models.orders import Cart
 
@@ -64,4 +64,24 @@ class SignUpPageView(TemplateView):
         if request.user.is_authenticated:
             return redirect('/')
 
-        return render(request, 'signup.html')
+        form = CreateCustomerForm()
+        return render(request, 'signup.html', {'form': form})
+
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def post(self, request):
+
+        if request.user.is_authenticated:
+            return redirect('/')
+
+        form = CreateCustomerForm(data=request.POST)
+        if form.is_valid():
+
+            # create user and automatically login the user
+            form.save(commit=True)
+            user = form.get_user()
+            login(request, user)
+
+            return redirect('/')
+
+        return render(request, 'signup.html', {'form': form})
