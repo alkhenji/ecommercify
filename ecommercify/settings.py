@@ -147,6 +147,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'store/static')
 )
 
+# Media files
+
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'mediafiles')
+MEDIA_URL = '/media/'
+
+
 WEBPACK_STATS_FILE = 'webpack-dev-stats.json'
 if not DEBUG:
     WEBPACK_STATS_FILE = 'webpack-prod-stats.json'

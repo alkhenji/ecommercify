@@ -38,40 +38,10 @@ export default class HomePage extends React.Component<PropsType, StateType> {
     });
   }
 
-  // fetchAllCategories(): null {
-  //   axios.get('/api-v1/categories/').then(response => {
-  //     this.setState({
-  //       categories: response.data
-  //     });
-  //   }).catch(error => {
-  //     console.error(error);
-  //   });
-  // }
-  //
-  // fetchAllStores(): null {
-  //   axios.get('/api-v1/stores/').then(response => {
-  //     this.setState({
-  //       stores: response.data
-  //     });
-  //   }).catch(error => {
-  //     console.error(error);
-  //   });
-  // }
-
-  // listCategories() {
-  //   const { categories } = this.state;
-  //   return categories.map(category => <p key={category.slug}>{category.name}</p>);
-  // }
-
   listProducts() {
     const { products } = this.state;
     return products.map(product => <ProductCard key={product.slug} product={product} />);
   }
-
-  // listStores() {
-  //   const { stores } = this.state;
-  //   return stores.map(store => <p key={store.slug}>{store.name}</p>);
-  // }
 
   render() {
     const { categories } = this.state;

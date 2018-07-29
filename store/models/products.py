@@ -98,7 +98,7 @@ class ProductImage(models.Model):
     def __str__(self):
         return '{} - {}'.format(str(self.product), self.pk)
 
-    def save(*args, **kwargs):
+    def save(self, *args, **kwargs):
         super(ProductImage, self).save(*args, **kwargs)
 
         # TODO: check that this doesn't cause any weird behavior in the admin
