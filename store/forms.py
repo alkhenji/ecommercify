@@ -1,7 +1,5 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
-from django.utils.text import capfirst
-
 
 UserModel = get_user_model()
 
@@ -11,10 +9,12 @@ class AuthenticationForm(forms.Form):
     AuthenticationForm class.
     '''
 
-    email = None
-    # email = EmailField(widget=forms.TextField(attrs={'autofocus': True}))
+    email = forms.CharField(label='Email', strip=True,
+        widget=forms.EmailInput(attrs={'autofocus': 'autofocus',
+        'placeholder': 'Email address'}))
+
     password = forms.CharField(label='Password', strip=False,
-        widget=forms.PasswordInput)
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
     error_messages = {
         'invalid_login': 'Please enter a correct %(email)s and password. \
@@ -31,11 +31,10 @@ class AuthenticationForm(forms.Form):
         self.user_cache = None
         super().__init__(*args, **kwargs)
 
-        # set the max length and label for the "email" field
+        # set the max length and label for the 'email' field
         self.email_field = UserModel._meta.get_field(UserModel.EMAIL_FIELD)
         self.fields['email'].max_length = self.email_field.max_length or 254
-        if self.fields['email'].label is None:
-            self.fields['email'].label = capfirst(self.email_field.verbose_name)
+
 
     def clean(self):
         email = self.cleaned_data.get('email')
@@ -49,6 +48,7 @@ class AuthenticationForm(forms.Form):
 
             self.user_cache = authenticate(self.request,
                 username=user.username, password=password)
+
             if self.user_cache is None:
                 raise self.get_invalid_login_error()
             else:

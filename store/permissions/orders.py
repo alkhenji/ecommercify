@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from django.contrib.sessions.models import Session
 
 class OrderPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -17,6 +18,13 @@ class CartProductPermission(permissions.BasePermission):
             return False
 
         if obj.cart.session:
-            return obj.cart.session == request.session.session_key
+            # store session if it's still new and hasn't been stored in db
+            if not request.session.exists(request.session.session_key):
+                request.session.create()
+
+            session = Session.objects.get(
+                session_key=request.session.session_key)
+
+            return obj.cart.session == session
 
         return False

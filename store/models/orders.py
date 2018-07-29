@@ -103,25 +103,78 @@ class ReturnRequest(models.Model):
 '''
 class Cart(models.Model):
 
-    customer = models.ForeignKey(Customer, null=True, blank=True,
+    customer = models.OneToOneField(Customer, null=True, blank=True,
         on_delete=models.CASCADE)
-    session = models.ForeignKey(Session, null=True, blank=True,
+    session = models.OneToOneField(Session, null=True, blank=True,
         on_delete=models.CASCADE)
 
     def __str__(self):
         return '{}/{}'.format(self.customer, self.session)
 
     @classmethod
-    def get_using_request(cls, request):
-        cart = None
+    def create_by_user_or_session(cls, request):
+
+        if request.user.is_authenticated:
+            return cls.objects.create(customer=request.user.customer)
+
+        else:
+            # store session if it's still new and hasn't been stored in db
+            if not request.session.exists(request.session.session_key):
+                request.session.create()
+
+            session = Session.objects.get(
+                session_key=request.session.session_key)
+
+            return cls.objects.create(session=session)
+
+    @classmethod
+    def get_by_user_or_session(cls, request):
+
+        if request.user.is_authenticated:
+            print('getting by user')
+            return cls.get_by_user(request.user)
+        else:
+            print('getting by session')
+            return cls.get_by_session(request)
+
+    @classmethod
+    def get_by_user(cls, user):
         try:
-            if request.user.is_authenticated:
-                cart = cls.objects.get(customer=request.user.customer)
-            else:
-                cart = cls.objects.get(session=request.session.session_key)
+            return cls.objects.get(customer=user.customer)
         except:
-            pass
-        return cart
+            return None
+
+    @classmethod
+    def get_by_session(cls, request):
+        # store session if it's still new and hasn't been stored in db
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        session = Session.objects.get(
+            session_key=request.session.session_key)
+
+        try:
+            return cls.objects.get(session=session)
+        except:
+            return None
+
+    def merge_cart(self, second_cart):
+        if not second_cart:
+            return
+
+        # merge second cart into this cart
+        # merging rules:
+        # 1. if product only exists in second cart, move it to this cart
+        # 2. if product exists in both, copy over the quantity
+        for second_cp in second_cart.cart_products.all():
+            try:
+                first_cp = self.cart_products.get(product=second_cp.product)
+                first_cp.update_quantity(second_cp.quantity)
+            except:
+                second_cp.change_cart(self)
+
+        # delete cart - this will delete related cart products too
+        second_cart.delete()
 
 
 '''
@@ -130,8 +183,8 @@ class Cart(models.Model):
 class CartProduct(models.Model):
 
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE,
-        related_name='cart_products')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+        related_name='cart_products', null=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
     quantity = models.SmallIntegerField()
 
     class Meta:
@@ -139,6 +192,11 @@ class CartProduct(models.Model):
 
     def __str__(self):
         return '{}x {}'.format(self.quantity, self.product)
+
+    def change_cart(self, cart):
+        if cart:
+            self.cart = cart
+            self.save(update_fields=['cart'])
 
     def update_quantity(self, quantity):
         if int(quantity) > 0:
