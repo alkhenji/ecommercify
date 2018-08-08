@@ -1,68 +1,87 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, View
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
-from django.contrib.auth.views import SuccessURLAllowedHostsMixin
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth import login, logout
 
-from store.forms import AuthenticationForm
+from store.forms import AuthenticationForm, CreateCustomerForm
+
+from store.models.orders import Cart
 
 class IndexPageView(TemplateView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
+
         return render(request, 'index.html')
 
-class LoginView(SuccessURLAllowedHostsMixin, FormView):
-    form_class = AuthenticationForm
-    authentication_form = None
-    redirect_authenticated_user = False
-    template_name = 'signin.html'
 
-    # @method_decorator(sensitive_post_parameter())
-    # @method_decorator(csrf_protect)
-    # @method_decorator(never_cache)
-    def dispatch(self, request, *args, **kwargs):
-        if self.redirect_authenticated_user and self.user.is_authenticated:
-            redirect_to = self.get_success_url()
-            if redirect_to == self.request.path:
-                raise ValueError(
-                    'Redirection loop for authenticated user detected. Check \
-                    that your LOGIN_REDIRECT_URL doesn\' point to a login page.'
-                )
-            return HttpResponseRedirect(redirect_to)
-        return super().dispatch(request, *args, **kwargs)
+class SignInPageView(TemplateView):
+    def get(self, request):
 
-    def get_success_url(self):
-        url = self.get_redirect_url()
-        return url or resolve_url(settings.LOGIN_REDIRECT_URL)
+        if request.user.is_authenticated:
+            return redirect('/')
 
-    def get_redirect_url(self):
-        '''
-        Return the user-originating redirect URL if it's safe.
-        '''
-        redirect_to = self.request.POST.get(
-            self.redirect_field_name,
-            self.request.GET.get(self.redirect_field_name, '')
-        )
-        url_is_safe = is_safe_url(
-            url=redirect_to,
-            allowed_hosts=self.get_success_url_allowed_hosts(),
-            require_https=self.request.is_secure()
-        )
-        return redirect_to if url_is_safe else ''
+        form = AuthenticationForm()
+        return render(request, 'signin.html', {'form': form})
 
-    def get_form_class(self):
-        return self.authentication_form or self.form_class
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def post(self, request):
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
+        if request.user.is_authenticated:
+            return redirect('/')
 
-    def form_valid(self, form):
-        '''
-        Security check complete. Log the user in.
-        '''
-        auth_login(self.request, form.get_user())
-        return HttpResponseRedirect(self.get_success_url())
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
 
-    def get_context_field():
-        pass
+            user = form.get_user()
+            user_cart = Cart.get_by_user(user)
+            session_cart = Cart.get_by_session(request)
+
+            # create user cart if there is none
+            if not user_cart:
+                user_cart = Cart.objects.create(customer=user.customer)
+
+            # merge user cart with session cart
+            user_cart.merge_cart(session_cart)
+
+            # login the user
+            login(request, user)
+
+            return redirect('/')
+
+        return render(request, 'signin.html', {'form': form})
+
+class SignOutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('/')
+
+class SignUpPageView(TemplateView):
+    def get(self, request):
+
+        if request.user.is_authenticated:
+            return redirect('/')
+
+        form = CreateCustomerForm()
+        return render(request, 'signup.html', {'form': form})
+
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def post(self, request):
+
+        if request.user.is_authenticated:
+            return redirect('/')
+
+        form = CreateCustomerForm(data=request.POST)
+        if form.is_valid():
+
+            # create user and automatically login the user
+            form.save(commit=True)
+            user = form.get_user()
+            login(request, user)
+
+            return redirect('/')
+
+        return render(request, 'signup.html', {'form': form})

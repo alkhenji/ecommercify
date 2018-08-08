@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
@@ -31,21 +31,30 @@ class CartProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     serializer_class = CartProductSerializer
 
     def get_queryset(self):
-        cart = Cart.get_using_request(self.request)
+        cart = Cart.get_by_user_or_session(self.request)
         if cart:
             return CartProduct.objects.filter(cart=cart)
         return CartProduct.objects.none()
 
     def create(self, request):
-        cart = Cart.get_using_request(request)
-        product = Product.objects.get(slug=request.POST['product'])
-        quantity = request.POST['quantity']
+        try:
+            cart = Cart.get_by_user_or_session(request)
+            if not cart:
+                cart = Cart.create_by_user_or_session(request)
 
-        CartProduct.objects.create(cart=cart,
-            product=product,
-            quantity=quantity)
+            product = Product.objects.get(slug=request.POST['product'])
+            quantity = request.POST['quantity']
 
-        return Response({'status': 'Success'})
+            cp = CartProduct.objects.create(cart=cart,
+                product=product,
+                quantity=quantity)
+
+            return Response({'status': 'Success'},\
+                status=status.HTTP_201_CREATED)
+
+        except:
+            return Response({'status': 'Failure'},
+                status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['POST'], detail=True)
     def update_quantity(self, request, pk=None):

@@ -25,6 +25,10 @@ urlpatterns = [
 
     # path('signin', SignInPageView.as_view(), name='signin'),
 
+    path('signin', SignInPageView.as_view(), name='signin'),
+    path('signup', SignUpPageView.as_view(), name='signup'),
+    path('signout', SignOutView.as_view(), name='signout'),
+
     # Should be last because matches everything
     re_path(r'', IndexPageView.as_view(), name='index')
 ]
