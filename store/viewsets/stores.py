@@ -9,6 +9,16 @@ class StoreViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     viewsets.GenericViewSet):
 
     permission_classes = (ReadOnlyPermission,)
-    queryset = Store.objects.all()
     lookup_field = 'slug'
     serializer_class = StoreSerializer
+
+    def get_queryset(self):
+        categories = self.request.query_params.getlist('category', None)
+
+        # build Queryset
+        stores = Store.objects.all()
+
+        if categories:
+            stores = stores.filter(products__subcategory__category__slug__in=categories).distinct()
+
+        return stores.order_by('name')

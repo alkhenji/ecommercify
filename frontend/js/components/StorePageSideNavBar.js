@@ -3,7 +3,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import queryString from 'query-string';
+import QueryString from 'query-string';
+import Radium from 'radium';
 
 import type { CategoryWithSubcategoriesType, SubcategoryWithCategoryType, SubcategoryType } from '../flowtypes';
 
@@ -17,7 +18,7 @@ type StateType = {
   loading: boolean
 };
 
-export default class StorePageSideNavBar extends React.Component<PropsType, StateType> {
+class StorePageSideNavBar extends React.Component<PropsType, StateType> {
 
 
   static defaultProps: PropsType = {
@@ -93,7 +94,7 @@ export default class StorePageSideNavBar extends React.Component<PropsType, Stat
   }
 
   getCurrentSubcategoryFilterParamsFromURL() {
-    var currentQueryParams = queryString.parse(window.location.search);
+    var currentQueryParams = QueryString.parse(window.location.search);
     var subcategoryFilterParams = currentQueryParams.subcategory || [];
 
     if (typeof subcategoryFilterParams == 'string') {
@@ -120,7 +121,7 @@ export default class StorePageSideNavBar extends React.Component<PropsType, Stat
 
   determineQueryParams(subcategorySlug: string) {
     var subcategoryFilterParams = this.getCurrentSubcategoryFilterParamsFromURL()
-    var currentQueryParams = queryString.parse(window.location.search);
+    var currentQueryParams = QueryString.parse(window.location.search);
 
     /* if subcategory filter already applied, remove it */
     if (subcategoryFilterParams.includes(subcategorySlug)) {
@@ -132,7 +133,7 @@ export default class StorePageSideNavBar extends React.Component<PropsType, Stat
     }
 
     currentQueryParams.subcategory = subcategoryFilterParams;
-    return queryString.stringify(currentQueryParams);
+    return QueryString.stringify(currentQueryParams);
   }
 
   renderSubcategories(category: CategoryWithSubcategoriesType) {
@@ -141,15 +142,21 @@ export default class StorePageSideNavBar extends React.Component<PropsType, Stat
 
     return category.subcategories.map((subcategory, i) =>
       <li className='nav-item' key={'subcategory-'+subcategory.slug+'-'+i}>
-        <NavLink to={'/store/' + storeSlug + '/?' + this.determineQueryParams(subcategory.slug) } className={ filteredSubcategories.includes(subcategory.slug) ? 'nav-link active' : 'nav-link' } activeClassName='active'>
-          { subcategory.name }
-        </NavLink>
+        <div key={'subcategory-div-'+subcategory.slug+'-'+i} style={styles.subcategoryTabStyle}>
+          <NavLink  to={'/store/' + storeSlug + '/?' + this.determineQueryParams(subcategory.slug) }
+                    className={ filteredSubcategories.includes(subcategory.slug) ? 'nav-link active' : 'nav-link' }
+                    activeClassName='active'
+                    style={ filteredSubcategories.includes(subcategory.slug) ? { backgroundColor: '#343a40' } : {color: 'black'} }
+                    activeStyle={{backgroundColor: '#343a40'}}>
+            { subcategory.name }
+          </NavLink>
+        </div>
       </li>
     );
   }
 
   determineQueryParamsForCategory(category: CategoryWithSubcategoriesType) {
-    var currentQueryParams = queryString.parse(window.location.search);
+    var currentQueryParams = QueryString.parse(window.location.search);
     var filteredSubcategories = this.getCurrentSubcategoryFilterParamsFromURL();
 
     var subcatCount = 0
@@ -176,7 +183,7 @@ export default class StorePageSideNavBar extends React.Component<PropsType, Stat
       }
     }
     currentQueryParams.subcategory = filteredSubcategories;
-    return queryString.stringify(currentQueryParams)
+    return QueryString.stringify(currentQueryParams)
   }
 
   renderCategories() {
@@ -185,10 +192,16 @@ export default class StorePageSideNavBar extends React.Component<PropsType, Stat
 
     return categories.map((category, i) => (
       <li className='nav-item' key={'category-'+category.slug+'-'+i}>
-        <NavLink className='nav-link' to={'/store/' + storeSlug + '/?' + this.determineQueryParamsForCategory(category) }>{ category.name }</NavLink>
-          <ul style={{listStyleType: 'none' }}>
-            { this.renderSubcategories(category) }
-          </ul>
+        <div style={styles.categoryTabStyle} key={'category-div-'+category.slug+'-'+i}>
+          <NavLink  to={'/store/' + storeSlug + '/?' + this.determineQueryParamsForCategory(category) }
+                    className='nav-link'
+                    style={styles.navlinkStyle}>
+            { category.name }
+          </NavLink>
+        </div>
+        <ul style={{listStyleType: 'none' }}>
+          { this.renderSubcategories(category) }
+        </ul>
       </li>
     ));
   }
@@ -216,3 +229,26 @@ export default class StorePageSideNavBar extends React.Component<PropsType, Stat
     );
   }
 }
+
+const styles: Object = {
+  categoryTabStyle: {
+    color: 'black',
+    backgroundClip: 'border-box',
+    border: '1px solid rgba(0,0,0,.125)',
+    borderRadius: '.25rem',
+
+    ':hover': {
+      backgroundColor: 'lightgrey',
+    },
+  },
+  subcategoryTabStyle: {
+    ':hover': {
+      backgroundColor: 'lightgrey',
+    },
+  },
+  navlinkStyle: {
+    color: 'black'
+  }
+};
+
+export default StorePageSideNavBar = Radium(StorePageSideNavBar);

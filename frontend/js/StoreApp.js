@@ -9,10 +9,10 @@ import CategoryPage from './pages/CategoryPage';
 import StorePage from './pages/StorePage';
 import CategoriesBar from './components/CategoriesBar';
 
-const StoreApp = ({ match }) => {
+const StoreApp = ({ match, history }: Object) => {
   return (
     <React.Fragment>
-      <CategoriesBar />
+      <CategoriesBar history={history} />
       <Switch>
         <Route exact path={match.url + 'product/:slug'} component={ProductPage} />
         <Route exact path={match.url + 'store/:slug'} component={StorePage} />

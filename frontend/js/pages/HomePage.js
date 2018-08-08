@@ -47,21 +47,21 @@ export default class HomePage extends React.Component<PropsType, StateType> {
     const { categories } = this.state;
 
     return (
-      <div>
+      <React.Fragment>
         <div style={styles.container} className="container">
           <div className="row">
             { this.listProducts() }
           </div>
         </div>
         <ShopByStores />
-      </div>
+      </React.Fragment>
     );
   }
 }
 
 const styles: Object = {
   container: {
-    marginTop: 30,
-    marginBottom: 30
+    paddingTop: 30,
+    paddingBottom: 30
   }
 };

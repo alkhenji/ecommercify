@@ -2,6 +2,7 @@
 
 import React from 'react';
 import axios from 'axios';
+import Media from 'react-media';
 
 import type { CategoryType, ProductType } from '../flowtypes';
 import ProductCard from '../components/ProductCard';
@@ -179,11 +180,14 @@ export default class CategoryPage extends React.Component<PropsType, StateType> 
         <div style={styles.container}>
           <div className='container'>
             <div className='row'>
-              <div className='col-md-3'>
-                <CategoryPageSideNavBar category={category} />
-              </div>
-              <div className='col-md-9'>
-                <div className='row'>
+
+              <Media
+                query={{ minWidth: '992px' }}
+                render={() => <div className='col-md-3'><CategoryPageSideNavBar category={category} /></div>}>
+              </Media>
+
+              <div className='col'>
+                <div className='row justify-content-center'>
                   { this.renderProductsUnderCategory() }
                 </div>
               </div>
@@ -200,7 +204,7 @@ export default class CategoryPage extends React.Component<PropsType, StateType> 
 
 const styles: Object = {
   container: {
-    marginTop: 30,
-    marginBottom: 30
+    paddingTop: 30,
+    paddingBottom: 30
   }
 };

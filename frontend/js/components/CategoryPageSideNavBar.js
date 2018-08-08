@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import Radium from 'radium';
 import axios from 'axios';
 
 import type { StoreType, CategoryType, SubcategoryType } from '../flowtypes';
@@ -26,7 +27,7 @@ type StateType = {
   categories: Array<CategoryType>,
 };
 
-export default class CategoryPageSideNavBar extends React.Component<PropsType, StateType> {
+class CategoryPageSideNavBar extends React.Component<PropsType, StateType> {
 
   state = {
     stores: [],
@@ -183,15 +184,23 @@ export default class CategoryPageSideNavBar extends React.Component<PropsType, S
     var currentPathName = window.location.pathname;
 
     var storesTabsList = stores.map((store, i) =>
-      <li className='nav-item' key={'store-'+store.slug+'-'+i}>
-        <NavLink to={this.generateStoreUrl(currentPathName, store.slug)} className='nav-link' activeClassName='active'>
+      <li style={styles.tabStyle} className='nav-item' key={'store-'+store.slug+'-'+i}>
+        <NavLink  to={this.generateStoreUrl(currentPathName, store.slug)}
+                  style={styles.navlinkStyle}
+                  className='nav-link'
+                  activeStyle={styles.activeTabExtraStyle}
+                  activeClassName='active'>
           { store.name }
         </NavLink>
       </li>
     );
 
-    var allStoresTab = <li className='nav-item' key={'store-all'}>
-        <NavLink exact to={this.generateStoreUrl(currentPathName, '')} className='nav-link' activeClassName='active'>
+    var allStoresTab = <li style={styles.tabStyle} className='nav-item' key={'store-all'}>
+        <NavLink  exact to={this.generateStoreUrl(currentPathName, '')}
+                  className='nav-link'
+                  style={styles.navlinkStyle}
+                  activeStyle={styles.activeTabExtraStyle}
+                  activeClassName='active'>
           All
         </NavLink>
       </li>
@@ -284,15 +293,23 @@ export default class CategoryPageSideNavBar extends React.Component<PropsType, S
     var currentPathName =  window.location.pathname;
 
     var subcategoriesTabsList = category.subcategories.map((subcategory, i) =>
-      <li className='nav-item' key={'subcategory-'+subcategory.slug+'-'+i}>
-        <NavLink to={this.generateSubcatUrl(currentPathName, category, subcategory.slug)} className='nav-link' activeClassName='active'>
+      <li style={styles.tabStyle} className='nav-item' key={'subcategory-'+subcategory.slug+'-'+i}>
+        <NavLink  to={this.generateSubcatUrl(currentPathName, category, subcategory.slug)}
+                  className='nav-link'
+                  style={styles.navlinkStyle}
+                  activeStyle={styles.activeTabExtraStyle}
+                  activeClassName='active'>
           { subcategory.name }
         </NavLink>
       </li>
     );
 
-    var allSubcatsTab = <li className='nav-item' key={'subcategory-all'}>
-      <NavLink exact to={this.removeSubcatFromUrl(currentPathName, category)} className='nav-link' activeClassName='active'>
+    var allSubcatsTab = <li style={styles.tabStyle} className='nav-item' key={'subcategory-all'}>
+      <NavLink  exact to={this.removeSubcatFromUrl(currentPathName, category)}
+                className='nav-link'
+                style={styles.navlinkStyle}
+                activeStyle={styles.activeTabExtraStyle}
+                activeClassName='active'>
         All
       </NavLink>
     </li>
@@ -308,7 +325,7 @@ export default class CategoryPageSideNavBar extends React.Component<PropsType, S
     return (
       categories.map((category, i) =>
         <li className='nav-item' key={'category-'+category.slug+'-'+i}>
-          <a className='nav-link' href='#' data-toggle='pill' href='#v-pills-profile-2' role='tab' aria-controls='v-pills-profile-2' aria-selected='false'>{ category.name }</a>
+          <a className='nav-link' href='#' data-toggle='pill' role='tab'>{ category.name }</a>
             <ul style={{listStyleType: 'none' }}>
               { this.renderSubcategories(category) }
             </ul>
@@ -336,3 +353,22 @@ export default class CategoryPageSideNavBar extends React.Component<PropsType, S
     );
   }
 }
+
+const styles: Object = {
+  tabStyle: {
+    color: 'black',
+
+    ':hover': {
+      backgroundColor: 'lightgrey'
+    },
+  },
+  activeTabExtraStyle: {
+    backgroundColor: '#343a40',
+    color: 'white',
+  },
+  navlinkStyle: {
+    color: 'black',
+  }
+};
+
+export default CategoryPageSideNavBar = Radium(CategoryPageSideNavBar);

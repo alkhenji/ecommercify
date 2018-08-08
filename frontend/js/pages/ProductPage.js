@@ -67,7 +67,7 @@ export default class ProductPage extends React.Component<ProductType, StateType>
 
 const styles: Object = {
   container: {
-    marginTop: 30,
-    marginBottom: 30
+    paddingTop: 30,
+    paddingBottom: 30
   }
 };
