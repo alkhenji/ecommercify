@@ -14,7 +14,16 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         lookup_field = 'id'
-        fields = '__all__'
+        exclude = ('id', 'registered', 'registered_date')
 
     user = UserSerializer()
     delivery_addresses = DeliveryAddressSerializer(many=True)
+
+
+class CustomerUserOnlySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        lookup_field = 'id'
+        fields = ('user',)
+
+    user = UserSerializer()

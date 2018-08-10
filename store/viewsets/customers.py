@@ -1,25 +1,31 @@
 from rest_framework import viewsets, mixins
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from store.models.customers import *
 from store.serializers.customers import *
 from store.permissions.customers import *
 
 
-class CustomerViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class CustomerViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet):
+
     permission_classes = (CustomerPermission,)
-    lookup_field = 'id'
     serializer_class = CustomerSerializer
 
     def get_queryset(self):
         user = self.request.user
-        try:
-            if user.is_superuser:
-                return Customer.objects.all()
-            else:
-                return Customer.objects.get(customer=user.customer)
-        except:
-            pass
+        if user.is_authenticated:
+            return Customer.get_by_user(user)
         return Customer.objects.none()
+
+    @action(methods=['GET'], detail=False)
+    def current(self, request, pk=None):
+        user = request.user
+        if user.is_authenticated:
+            serializer = CustomerUserOnlySerializer(Customer.get_by_user(user))
+            return Response(serializer.data)
+        return Response({})
 
 
 class DeliveryAddressViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,

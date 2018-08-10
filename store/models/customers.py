@@ -25,6 +25,13 @@ class Customer(models.Model):
     def full_name(self):
         return '{} {}'.format(self.user.first_name, self.user.last_name)
 
+    @classmethod
+    def get_by_user(cls, user):
+        try:
+            return cls.objects.get(user=user, registered=True)
+        except:
+            return None
+
 '''
     Model representation of a Delivery Address that is linked to a Customer.
 '''
