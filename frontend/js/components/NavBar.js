@@ -72,7 +72,7 @@ export default class NavBar extends React.Component<PropsType, StateType> {
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
-          <NavLink className="navbar-brand" activeClassName="active" to="/">E-Commercify</NavLink>
+          <NavLink className="navbar-brand" activeClassName="active" to="/">Click-It</NavLink>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>

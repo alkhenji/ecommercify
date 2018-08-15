@@ -7,7 +7,7 @@ export default class Footer extends React.Component {
     return (
       <footer className='footer' style={styles.footerStyle}>
         <div className='container'>
-          <span className='text-muted'>2018 E-Commercify. All Rights Reserved.</span>
+          <span className='text-muted'>2018 Click-It. All Rights Reserved.</span>
         </div>
       </footer>
     );
