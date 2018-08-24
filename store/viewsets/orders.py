@@ -33,7 +33,7 @@ class CartProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     def get_queryset(self):
         cart = Cart.get_by_user_or_session(self.request)
         if cart:
-            return CartProduct.objects.filter(cart=cart)
+            return CartProduct.objects.filter(cart=cart).order_by('pk')
         return CartProduct.objects.none()
 
     def create(self, request):
@@ -49,12 +49,33 @@ class CartProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                 product=product,
                 quantity=quantity)
 
-            return Response({'status': 'Success'},\
-                status=status.HTTP_201_CREATED)
+            updated_cart_products = CartProduct.objects.filter(cart=cart).order_by('pk')
+            serializer = self.get_serializer(updated_cart_products, many=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except:
-            return Response({'status': 'Failure'},
-                status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(
+                {'status': 'Failed to add product to cart'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except Http404:
+            return Response(
+                {'status': 'Failed to remove product from cart'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        cart = Cart.get_by_user_or_session(request)
+        updated_cart_products = CartProduct.objects.filter(cart=cart).order_by('pk')
+        serializer = self.get_serializer(updated_cart_products, many=True)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
 
     @action(methods=['POST'], detail=True)
     def update_quantity(self, request, pk=None):
@@ -62,4 +83,7 @@ class CartProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         quantity = request.POST['quantity']
         cart_product.update_quantity(quantity)
 
-        return Response({'status': 'Success'})
+        cart = Cart.get_by_user_or_session(self.request)
+        updated_cart_products = CartProduct.objects.filter(cart=cart).order_by('pk')
+        serializer = self.get_serializer(updated_cart_products, many=True)
+        return Response(serializer.data)

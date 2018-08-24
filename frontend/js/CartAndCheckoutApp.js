@@ -5,9 +5,6 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 
 const CartAndCheckoutApp = ({ match }) => {
-  console.log('CartAndCheckoutApp');
-  console.log(match);
-
   return (
     <React.Fragment>
       <Route exact path={match.url + '/checkout'} component={CheckoutPage} />

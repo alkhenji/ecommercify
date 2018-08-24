@@ -2,51 +2,41 @@
 
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 
 import CartProduct from '../components/CartProduct';
 
-type PropsType = {};
-type StateType = {
-  cart: Array<CartProductType>,
-  loading: boolean
+import { fetchCartProducts } from '../redux/actions/Cart';
+
+import type { CartProductType } from '../flowtypes';
+
+type PropsType = {
+  cartProducts: Array<CartProductType>,
+  loading: boolean,
+  error: Object,
 };
 
-export default class CartPage extends React.Component<PropsType, StateType> {
+type StateType = {};
 
-  state: StateType = {
-    cart: [],
-    loading: true
-  };
+const mapStateToProps = state => ({
+  cartProducts: state.cartProducts,
+  loading: state.loading,
+  error: state.error
+});
 
-  componentDidMount() {
-    this.fetchCart();
-  }
 
-  fetchCart() {
-    axios.get('/api-v1/cart/').then(response => {
-      this.setState({
-        cart: response.data,
-        loading: false
-      });
-    }).catch(error => {
-      console.error(error);
-      this.setState({
-        loading: false
-      });
-    });
-  }
+class CartPage extends React.Component<PropsType, StateType> {
 
   renderCartProducts() {
-    const { cart } = this.state;
+    const { cartProducts } = this.props;
 
-    return cart.map(product => (
-      <CartProduct key={product.id} cartProduct={product}
-        refreshCart={this.fetchCart.bind(this)} />
+    return cartProducts.map(product => (
+      <CartProduct key={product.id} cartProduct={product} />
     ));
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading } = this.props;
 
     if (loading) {
       return (
@@ -64,3 +54,5 @@ export default class CartPage extends React.Component<PropsType, StateType> {
     );
   }
 }
+
+export default connect(mapStateToProps, null) (CartPage);

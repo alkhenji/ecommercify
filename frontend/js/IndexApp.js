@@ -13,6 +13,10 @@ import CategoriesBar from './components/CategoriesBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
+import { Provider, connect } from 'react-redux';
+import Store from './redux/Store';
+import { fetchCartProducts } from './redux/actions/Cart';
+
 let reactAppElement = document.getElementById('react-app');
 
 /* Asynchronously load component (chunk) when needed */
@@ -39,32 +43,56 @@ const SignUpAndSignInApp = AsyncComponent(
     { name: 'SignUpAndSignInApp' }
 );
 
-const IndexApp = () => (
-    <Router>
-        <React.Fragment>
-            <NavBar />
-            <div style={styles.container}>
-                <Switch>
-                    <Route path='/cart' component={CartAndCheckoutApp} />
-                    <Route path='/about' component={AboutAndReturnApp} />
-                    <Route path='/auth' component={SignUpAndSignInApp} />
-                    <Route path='/' component={StoreApp} />
-                </Switch>
-            </div>
-            <Footer />
-        </React.Fragment>
-    </Router>
-);
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchCartProducts: () => {dispatch(fetchCartProducts())}
+    };
+};
+
+type PropsType = {
+    fetchCartProducts: () => {}
+};
+type StateType = {};
+
+class IndexApp extends React.Component<PropsType, StateType> {
+
+    componentDidMount() {
+        this.props.fetchCartProducts();
+    }
+
+    render() {
+        return (
+            <Router>
+                <React.Fragment>
+                    <NavBar />
+                    <div style={styles.container}>
+                        <Switch>
+                            <Route path='/cart' component={CartAndCheckoutApp} />
+                            <Route path='/about' component={AboutAndReturnApp} />
+                            <Route path='/auth' component={SignUpAndSignInApp} />
+                            <Route path='/' component={StoreApp} />
+                        </Switch>
+                    </div>
+                    <Footer />
+                </React.Fragment>
+            </Router>
+        );
+    }
+}
 
 const styles = {
     /* To get sticky NavBar & Footer */
     container: {
         overflowY: 'scroll',
         maxHeight: 'calc(100vh - 116px)', /* view height - navbar height (56px) - footer height (60px) */
-        // paddingTop: 35, /* some space under navbar before adding content */
     }
 }
 
+IndexApp = connect(null, mapDispatchToProps) (IndexApp);
+
 ReactDOM.render((
-    <IndexApp />
+    <Provider store={Store} >
+        <IndexApp />
+    </Provider>
 ), reactAppElement);

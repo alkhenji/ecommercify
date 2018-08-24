@@ -5,33 +5,42 @@ import { Link  } from 'react-router-dom';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import qs from 'qs';
+import { connect } from 'react-redux';
+
+import { removeProductFromCart, updateProductDataInCart } from '../redux/actions/Cart';
 
 import type { CartProductType } from '../flowtypes';
 
-
 type PropsType = {
   cartProduct: CartProductType,
-  refreshCart: () => {}
+  removeProductFromCart: (product: CartProductType) => {},
+  updateProductDataInCart: (product: CartProductType, data: Object) => {}
 };
 
 type StateType = {
   loading: boolean
 };
 
+const mapDispatchToProps = dispatch => ({
+  removeProductFromCart: (product) => dispatch(removeProductFromCart(product)),
+  updateProductDataInCart: (product, data) => dispatch(updateProductDataInCart(product, data))
+});
 
-export default class CartProduct extends React.Component<PropsType, StateType> {
+class CartProduct extends React.Component<PropsType, StateType> {
 
   state: StateType = {
     loading: false
   };
 
   renderQuantityDropdownItems(maximum: number) {
+    const { cartProduct, updateProductDataInCart } = this.props;
     const items = [];
+
     for (var i = 0; i < maximum; i++) {
       const quantity = i + 1;
       items.push(
         <button key={i} className="dropdown-item"
-          onClick={() => this.updateCartProductQuantity(quantity)}>
+          onClick={() => updateProductDataInCart(cartProduct, {quantity})}>
           {quantity}
         </button>
       );
@@ -39,39 +48,8 @@ export default class CartProduct extends React.Component<PropsType, StateType> {
     return items;
   }
 
-  removeCartProduct() {
-    const { cartProduct, refreshCart } = this.props;
-
-    axios.delete('/api-v1/cart/' + cartProduct.id + '/', {
-      headers: {
-        'X-CSRFToken': cookie.load('csrftoken')
-      }
-    }).then(response => {
-      refreshCart();
-    }).catch(error => {
-      console.error(error);
-    });
-  }
-
-  updateCartProductQuantity(quantity: number) {
-    const { cartProduct, refreshCart } = this.props;
-
-    axios.post('/api-v1/cart/' + cartProduct.id + '/update_quantity/',
-      qs.stringify({
-        quantity
-      }), {
-      headers: {
-        'X-CSRFToken': cookie.load('csrftoken'),
-      }
-    }).then(response => {
-      refreshCart();
-    }).catch(error => {
-      console.error(error);
-    });
-  }
-
   render() {
-    const { cartProduct } = this.props;
+    const { cartProduct, removeProductFromCart } = this.props;
 
     const category = cartProduct.product.subcategory.category;
     const subcategory = cartProduct.product.subcategory;
@@ -115,7 +93,7 @@ export default class CartProduct extends React.Component<PropsType, StateType> {
                   </div>
 
                   <button type="button" className="btn btn-outline-danger"
-                    onClick={this.removeCartProduct.bind(this)}>
+                    onClick={() => removeProductFromCart(cartProduct)}>
                     Remove
                   </button>
                 </div>
@@ -127,3 +105,5 @@ export default class CartProduct extends React.Component<PropsType, StateType> {
     )
   }
 }
+
+export default connect(null, mapDispatchToProps) (CartProduct);

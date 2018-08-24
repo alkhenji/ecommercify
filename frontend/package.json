@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/mfituri/ecommercify#readme",
   "dependencies": {
+    "@fortawesome/react-fontawesome": "^0.1.2",
     "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
@@ -41,7 +42,10 @@
     "react-cookies": "^0.1.0",
     "react-dom": "^16.4.0",
     "react-media": "^1.8.0",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
     "webpack": "^4.10.2",
     "webpack-bundle-tracker": "git+ssh://git@github.com/Verbozeteam/webpack-bundle-tracker.git",
     "webpack-cli": "^2.1.4",

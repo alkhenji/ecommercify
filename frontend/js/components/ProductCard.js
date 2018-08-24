@@ -5,45 +5,49 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import qs from 'qs';
+import { connect } from 'react-redux';
 
-import type { ProductType } from '../flowtypes';
+import { addProductToCart, updateProductDataInCart } from '../redux/actions/Cart';
+
+import type { ProductType, CartProductType } from '../flowtypes';
 
 type PropsType = {
   product: ProductType,
+  cartProducts: Array<CartProductType>,
+  addingProduct: boolean,
+  error: Object,
+  addProductToCart: (product: ProductType, quantity: number) => {},
+  updateProductDataInCart: (product: CartProductType, data: Object) => {},
 };
 
-type StateType = {
-  cart_loading: boolean
-};
+type StateType = {};
 
-export default class ProductCard extends React.Component<PropsType, StateType> {
+const mapStateToProps = state => ({
+  cartProducts: state.cartProducts,
+  addingProduct: state.addingProduct,
+  error: state.error,
+});
 
-  state: StateType = {
-    cart_loading: false
-  };
+const mapDispatchToProps = dispatch => ({
+  addProductToCart: (product, quantity) => dispatch(addProductToCart(product, quantity)),
+  updateProductDataInCart: (product, data) => dispatch(updateProductDataInCart(product, data)),
+});
 
-  addProductToCard(quantity: number) {
-    this.setState({
-      cart_loading: true
-    });
+class ProductCard extends React.Component<PropsType, StateType> {
 
-    const { product } = this.props;
+  handleAddProductToCart(product: ProductType, quantity: number) {
+    const { cartProducts, addProductToCart, updateProductDataInCart } = this.props;
 
-    axios.post('/api-v1/cart/',
-      qs.stringify({
-        product: product.slug,
-        quantity
-      }), {
-      headers: {
-				'X-CSRFToken': cookie.load('csrftoken'),
-			}
-    }).then(response => {
-      this.setState({
-        cart_loading: false
-      });
-    }).catch(error => {
-      console.error(error);
-    });
+    /* we check if product exists in cart */
+    for (var i = 0; i < cartProducts.length; i++) {
+      if (product.slug === cartProducts[i].product.slug) {
+        /* product exists in cart, update it's quantity */
+        updateProductDataInCart(cartProducts[i], {quantity: cartProducts[i].quantity + quantity})
+        return;
+      }
+    }
+    /* new product not found in cart, add to cart */
+    addProductToCart(product, quantity);
   }
 
   renderDescription(desc: string) {
@@ -58,8 +62,7 @@ export default class ProductCard extends React.Component<PropsType, StateType> {
   }
 
   render() {
-    const { product } = this.props;
-    const { cart_loading } = this.state;
+    const { product, cartProducts, addingProduct } = this.props;
 
     return (
       <div className='col-md-4'>
@@ -74,8 +77,9 @@ export default class ProductCard extends React.Component<PropsType, StateType> {
             <div className='d-flex justify-content-between align-items-center'>
               <div className='btn-group'>
                 <button type='button' className='btn btn-md btn-outline-secondary'
-                  onClick={() => this.addProductToCard(1)}>
-                  {(cart_loading) ? 'Loading...' : 'Add to Cart'}
+                  onClick={() => this.handleAddProductToCart(product, 1)}
+                  disabled={addingProduct}>
+                  Add to Cart
                 </button>
               </div>
               <small className='text-muted'><Link to={ '/category/'+ product.subcategory.category.slug }> { product.subcategory.category.name } </Link> > { product.subcategory.name }</small>
@@ -87,6 +91,7 @@ export default class ProductCard extends React.Component<PropsType, StateType> {
   }
 }
 
+export default connect(mapStateToProps, mapDispatchToProps) (ProductCard);
 
 const styles = {
   descriptionStyle: {
