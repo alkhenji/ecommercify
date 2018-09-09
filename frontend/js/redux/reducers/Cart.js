@@ -104,31 +104,37 @@ export default function cartProductsReducer(state = initialState, action) {
     case UPDATE_PRODUCT_DATA_IN_CART_BEGIN:
       /* Set loading to 'true' so we show spinner
       /* Reset any errors
+      /* Set addingProduct to 'true' so we 'disable' add to cart button
       */
       return {
         ...state,
         loading: true,
-        error: null
+        error: null,
+        addingProduct: true,
       };
 
     case UPDATE_PRODUCT_DATA_IN_CART_SUCCESS:
       /* Set loading to 'false'
       /* Replace the cartProducts with the ones from server
+      /* Set addingProduct to 'false' so 'enable' add to cart button
       */
       return {
         ...state,
         loading: false,
+        addingProduct: false,
         cartProducts: action.payload.cartProducts
       }
 
     case UPDATE_PRODUCT_DATA_IN_CART_FAILURE:
       /* Set loading to 'false'
+      /* Set addingProduct to 'false' so 'enable' add to cart button
       /* Save error so we can display it somewhere
       /* cartProducts remains as is
       */
       return {
         ...state,
         loading: false,
+        addingProduct: false,
         error: action.payload.error
       }
 

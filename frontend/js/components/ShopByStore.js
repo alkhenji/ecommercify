@@ -7,6 +7,7 @@ import axios from 'axios';
 import type { StoreType } from '../flowtypes';
 
 import StoreCard from './StoreCard';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 type PropsType = {};
 type StateType = {
@@ -47,15 +48,12 @@ export default class ShopByStores extends React.Component<PropsType, StateType> 
   render() {
     const { stores, loading } = this.state;
 
-    if (loading) {
-      return <h1>Loading stores...</h1>;
-    }
-
     return (
       <div style={styles.container} className="bg-light">
         <div className="container">
           <h3 style={styles.header}>Shop by Store</h3>
-          <div className="row justify-content-center">
+          <div className="row justify-content-center" style={ styles.mainRowStyle }>
+            { loading ? <LoadingSpinner /> : null }
             { this.listStores() }
           </div>
         </div>
@@ -67,12 +65,16 @@ export default class ShopByStores extends React.Component<PropsType, StateType> 
 const styles: Object = {
   container: {
     paddingTop: 20,
-    paddingBottom: 20
+    paddingBottom: 20,
+    minHeight: 200,
   },
   header: {
     textAlign: 'center'
   },
   storeCard: {
     margin: 10
+  },
+  mainRowStyle: {
+    position: 'relative'
   }
 };

@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 
 import CartProduct from '../components/CartProduct';
 
+import LoadingSpinner from '../components/LoadingSpinner';
+
 import { fetchCartProducts } from '../redux/actions/Cart';
 
 import type { CartProductType } from '../flowtypes';
@@ -24,7 +26,6 @@ const mapStateToProps = state => ({
   error: state.error
 });
 
-
 class CartPage extends React.Component<PropsType, StateType> {
 
   renderCartProducts() {
@@ -38,18 +39,13 @@ class CartPage extends React.Component<PropsType, StateType> {
   render() {
     const { loading } = this.props;
 
-    if (loading) {
-      return (
-        <div className="container">
-          <h1>Loading...</h1>
-        </div>
-      );
-    }
-
     return (
-      <div className="container">
+      <div className='container'>
         <h1>Your Cart</h1>
-        {this.renderCartProducts()}
+        <div style={{ position: 'relative' }} >
+          { loading ? <LoadingSpinner /> : null }
+          { this.renderCartProducts() }
+        </div>
       </div>
     );
   }

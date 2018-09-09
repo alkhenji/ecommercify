@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import ProductCard from '../components/ProductCard';
 import ShopByStores from '../components/ShopByStore';
+import LoadingSpinner from '../components/LoadingSpinner'
 
 import type { CategoryWithSubcategoriesType, ProductType, StoreType }
   from '../flowtypes';
@@ -19,7 +20,8 @@ export default class HomePage extends React.Component<PropsType, StateType> {
   state: StateType = {
     categories: [],
     products: [],
-    stores: []
+    stores: [],
+    loading: true
   };
 
   componentDidMount() {
@@ -31,10 +33,14 @@ export default class HomePage extends React.Component<PropsType, StateType> {
   fetchAllProducts(): null {
     axios.get('/api-v1/products/').then(response => {
       this.setState({
-        products: response.data
+        products: response.data,
+        loading: false
       });
     }).catch(error => {
       console.error(error);
+      this.setState({
+        loading: false
+      });
     });
   }
 
@@ -44,12 +50,13 @@ export default class HomePage extends React.Component<PropsType, StateType> {
   }
 
   render() {
-    const { categories } = this.state;
+    const { categories, loading } = this.state;
 
     return (
       <React.Fragment>
         <div style={styles.container} className="container">
-          <div className="row">
+          <div className="row" style={ styles.mainRowStyle }>
+            { loading ? <LoadingSpinner /> : null }
             { this.listProducts() }
           </div>
         </div>
@@ -62,6 +69,10 @@ export default class HomePage extends React.Component<PropsType, StateType> {
 const styles: Object = {
   container: {
     paddingTop: 30,
-    paddingBottom: 30
+    paddingBottom: 30,
+    minHeight: 250
+  },
+  mainRowStyle: {
+    position: 'relative'
   }
 };
