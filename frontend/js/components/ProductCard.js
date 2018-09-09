@@ -78,8 +78,8 @@ class ProductCard extends React.Component<PropsType, StateType> {
               <div className='btn-group'>
                 <button type='button' className='btn btn-md btn-outline-secondary'
                   onClick={() => this.handleAddProductToCart(product, 1)}
-                  disabled={addingProduct}>
-                  Add to Cart
+                  disabled={addingProduct || product.quantity == 0}>
+                  { product.quantity != 0 ? <span>Add to Cart</span> : <span>Out of Stock</span> }
                 </button>
               </div>
               <small className='text-muted'><Link to={ '/category/'+ product.subcategory.category.slug }> { product.subcategory.category.name } </Link> > { product.subcategory.name }</small>

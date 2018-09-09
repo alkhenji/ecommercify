@@ -57,7 +57,12 @@ export default class ProductPage extends React.Component<ProductType, StateType>
             <p className='lead'>{ product.description }</p>
             <h5>{ product.price } QAR</h5>
             <br/>
-            <button type='button' className='btn btn-lg btn-outline-secondary'>Add to Cart</button>
+            <button
+              type='button'
+              className='btn btn-lg btn-outline-secondary'
+              disabled={ product.quantity == 0 }>
+                { product.quantity != 0 ? <span>Add to Cart</span> : <span>Out of Stock</span> }
+            </button>
           </div>
         </div>
       </div>

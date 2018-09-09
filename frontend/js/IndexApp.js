@@ -3,6 +3,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AsyncComponent from './AsyncComponent';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
@@ -66,6 +68,7 @@ class IndexApp extends React.Component<PropsType, StateType> {
             <Router>
                 <React.Fragment>
                     <NavBar />
+                    <ToastContainer hideProgressBar />
                     <div style={styles.container}>
                         <Switch>
                             <Route path='/cart' component={CartAndCheckoutApp} />

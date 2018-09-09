@@ -1,5 +1,7 @@
 /* @flow */
 
+import { toast } from 'react-toastify';
+
 import {
   FETCH_CART_PRODUCTS_BEGIN,
   FETCH_CART_PRODUCTS_SUCCESS,
@@ -55,6 +57,14 @@ export default function cartProductsReducer(state = initialState, action) {
       /* Save the error, and we can display it somewhere
       /* Since it failed, we don't have cartProducts to display anymore, so set it empty
       */
+      toast.error('Oops! Something went wrong. Please try again.', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return {
         ...state,
         loading: false,
@@ -79,7 +89,16 @@ export default function cartProductsReducer(state = initialState, action) {
     case ADD_PRODUCT_TO_CART_SUCCESS:
       /* Set addingProduct to 'false'
       /* Replace the cartProducts with the ones from server
+      /* Notify user with toast
       */
+      toast('🛒 Added to cart!', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return {
         ...state,
         loading: false,
@@ -91,7 +110,16 @@ export default function cartProductsReducer(state = initialState, action) {
       /* Set addingProduct to 'false'
       /* Save the error so we can display it somewhere
       /* cartProducts remains as is
+      /* Notify user with toast
       */
+      toast.error('Oops! Something went wrong. Please try again.', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return {
         ...state,
         loading: false,
@@ -117,7 +145,16 @@ export default function cartProductsReducer(state = initialState, action) {
       /* Set loading to 'false'
       /* Replace the cartProducts with the ones from server
       /* Set addingProduct to 'false' so 'enable' add to cart button
+      /* Notify user with toast
       */
+      toast('🛒 Updated cart!', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return {
         ...state,
         loading: false,
@@ -153,7 +190,16 @@ export default function cartProductsReducer(state = initialState, action) {
     case REMOVE_PRODUCT_FROM_CART_SUCCESS:
       /* Set loading to 'false'
       /* Replace the cartProducts with ones from server
+      /* Notify user with toast
       */
+      toast('🛒 Removed from cart!', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return {
         ...state,
         loading: false,
@@ -163,7 +209,16 @@ export default function cartProductsReducer(state = initialState, action) {
     case REMOVE_PRODUCT_FROM_CART_FAILURE:
       /* Set loading to 'false'
       /* Save error so we can display it somewhere
+      /* Notify user using toast
       */
+      toast.error('Oops! Something went wrong. Please try again.', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return {
         ...state,
         loading: false,
